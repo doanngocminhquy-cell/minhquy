@@ -33,23 +33,68 @@
       }
     }
 
-    /* ===== CÂY THÔNG 2 BÊN ===== */
+    /* ===== CÂY THÔNG 2 BÊN (CÂY BẠN GỬI) ===== */
     .tree-left, .tree-right {
       position: fixed;
-      width: 110px;
+      width: 130px;
       bottom: 20px;
-      filter: drop-shadow(0 0 12px rgba(255,255,255,0.6));
+      filter: drop-shadow(0 0 18px rgba(255,255,255,0.8));
       z-index: 9000;
-      animation: pulse 2.2s infinite ease-in-out;
+      animation: pulse 2.4s infinite ease-in-out;
     }
 
-    .tree-left { left: 20px; }
-    .tree-right { right: 20px; }
+    .tree-left { left: 25px; }
+    .tree-right { right: 25px; }
 
     @keyframes pulse {
       0% { transform: scale(1); opacity: 0.9; }
       50% { transform: scale(1.05); opacity: 1; }
       100% { transform: scale(1); opacity: 0.9; }
+    }
+
+    /* ===== DÂY ĐÈN NOEL TRÊN CÙNG ===== */
+    .christmas-lights {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      pointer-events: none;
+      z-index: 99999;
+    }
+
+    .christmas-lights span {
+      width: 16px;
+      height: 26px;
+      border-radius: 50%;
+      background: red;
+      margin-top: 10px;
+      animation: blink 1.4s infinite alternate ease-in-out;
+      filter: drop-shadow(0 0 8px rgba(255,255,255,0.9));
+    }
+
+    .christmas-lights span:nth-child(odd) { animation-duration: 1s; }
+    .christmas-lights span:nth-child(3n) { animation-duration: 1.8s; }
+
+    @keyframes blink {
+      0% {
+        transform: translateY(0px) scale(1);
+        opacity: 0.5;
+        background: #ef4444;
+      }
+      50% {
+        transform: translateY(6px) scale(1.15);
+        opacity: 1;
+        background: #facc15;
+      }
+      100% {
+        transform: translateY(0px) scale(1);
+        opacity: 0.6;
+        background: #4ade80;
+      }
     }
 
     /* ===== CONTAINER ===== */
@@ -78,7 +123,7 @@
       font-weight: 700;
       margin: 10px 0 20px;
       color: #fef08a;
-      text-shadow: 0 0 8px rgba(255,255,255,0.5);
+      text-shadow: 0 0 8px rgba(255,255,255,0.6);
     }
 
     textarea {
@@ -92,7 +137,7 @@
       resize: vertical;
     }
 
-    /* ===== NÚT ZALO + CHECK ===== */
+    /* ===== NÚT ===== */
     .btn-row {
       display: flex;
       justify-content: space-between;
@@ -123,9 +168,7 @@
       box-shadow: 0 5px 18px rgba(255, 87, 34, 0.45);
       transition: .2s;
     }
-    .btn-check:hover {
-      transform: translateY(-2px);
-    }
+    .btn-check:hover { transform: translateY(-2px); }
 
     #status {
       margin-top: 20px;
@@ -169,11 +212,17 @@
     }
   </style>
 </head>
+
 <body>
 
-  <!-- Cây thông Noel -->
-  <img src="https://cdn-icons-png.flaticon.com/512/1998/1998619.png" class="tree-left" />
-  <img src="https://cdn-icons-png.flaticon.com/512/1998/1998619.png" class="tree-right" />
+  <!-- DÂY ĐÈN TREO -->
+  <div class="christmas-lights">
+    ${"<span></span>".repeat(20)}
+  </div>
+
+  <!-- CÂY THÔNG BÊN TRÁI + PHẢI -->
+  <img src="https://i.imgur.com/Eq0TsTw.png" class="tree-left" />
+  <img src="https://i.imgur.com/Eq0TsTw.png" class="tree-right" />
 
   <!-- TUYẾT -->
   <script>
@@ -196,11 +245,9 @@
 
   <div id="container">
 
-    <img src="./logo.png" class="logo-img" alt="logo">
+    <img src="./logo.png" class="logo-img">
 
-    <p style="text-align:center;margin:0;">
-      ❤️ <b>Chung tay ủng hộ đồng bào vùng lũ miền Trung</b> ❤️
-    </p>
+    <p style="text-align:center;margin:0;">❤️ <b>Chung tay ủng hộ đồng bào vùng lũ miền Trung</b> ❤️</p>
     <p style="text-align:center;margin:6px 0 20px;">
       <b>Số tài khoản:</b> 8888881010 – <b>VCB</b><br>
       Mặt Trận Tổ Quốc Việt Nam – Ban Cứu Trợ Trung Ương
@@ -242,7 +289,7 @@
       let data;
       try {
         data = await res.json();
-      } catch (e) {
+      } catch {
         status.textContent = "Lỗi: Server không trả JSON.";
         return;
       }
