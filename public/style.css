@@ -1,264 +1,204 @@
-/* =========================
-   FULL UI – TO – ĐẸP (Shopee vibe)
-   Giữ nguyên HTML của bạn
-========================= */
-
-/* Reset */
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
 }
 
-body{
-  background:
-    radial-gradient(1200px 600px at 10% -10%, #ffe8e2 0%, transparent 60%),
-    radial-gradient(1000px 500px at 110% 0%, #fff2ee 0%, transparent 55%),
-    #f4f6fb;
-  color:#0f172a;
-  min-height:100vh;
-  padding: 24px;
+/* =========================================
+   BACKGROUND GIÁNG SINH – GRADIENT MỊN
+========================================= */
+body {
+  background: linear-gradient(160deg, #8b1e22, #5a1122, #1a1b32);
+  background-size: 300% 300%;
+  animation: bgMove 12s ease infinite;
+  color: #f1f5f9;
+  padding: 20px;
+  overflow-x: hidden;
 }
 
-/* Container full màn */
-#container{
-  width:100%;
-  max-width: 1600px;      /* FULL rộng */
-  margin: 0 auto;
-  padding: 32px 40px;
-
-  background: rgba(255,255,255,0.9);
-  border:1px solid #eef0f4;
-  border-radius: 20px;
-  box-shadow: 0 14px 40px rgba(15,23,42,.08);
+@keyframes bgMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-/* Title */
-h2{
-  font-size: 30px;        /* TO hơn */
-  font-weight: 900;
-  letter-spacing: .3px;
-  text-align:center;
-  margin-bottom: 22px;
-  color:#111827;
+/* =========================================
+   CONTAINER – góc bo iOS + shadow mềm
+========================================= */
+#container {
+  max-width: 1100px;
+  margin: 40px auto;
+  background: rgba(255, 255, 255, 0.09);
+  padding: 40px 50px;
+  border-radius: 28px;
+  backdrop-filter: blur(18px);
+  border: solid 1px rgba(255,255,255,0.25);
+
+  /* Shadow mềm kiểu iOS */
+  box-shadow:
+     0 12px 30px rgba(0,0,0,0.25),
+     inset 0 0 45px rgba(255,255,255,0.05);
+
+  animation: fadeUp 1.2s ease;
 }
 
-/* Textarea */
-textarea{
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   LOGO
+========================================= */
+.logo-img {
+  width: 120px;
+  display: block;
+  margin: 0 auto 15px;
+  border-radius: 100%;
+  box-shadow: 0 8px 25px rgba(255,255,255,0.35);
+  animation: fade 1.2s ease;
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* =========================================
+   TIÊU ĐỀ – neon vàng
+========================================= */
+h2 {
+  text-align: center;
+  font-size: 38px;
+  font-weight: 800;
+  margin-bottom: 18px;
+  color: #ffe68a;
+
+  text-shadow:
+    0 0 8px rgba(255, 220, 140, 0.9),
+    0 0 18px rgba(255, 199, 68, 0.8),
+    0 0 30px rgba(255, 185, 0, 0.6);
+}
+
+/* =========================================
+   TEXTAREA
+========================================= */
+textarea {
   width: 100%;
-  min-height: 180px;      /* CAO hơn */
-  border:2px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 14px 16px;
-  font-size: 16px;        /* CHỮ to */
-  line-height: 1.5;
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border-radius: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  padding: 14px;
+  font-size: 15px;
+  min-height: 150px;
   outline: none;
   resize: vertical;
-  transition: .2s;
-  background:#fff;
-}
-textarea:focus{
-  border-color:#EE4D2D;
-  box-shadow:0 0 0 5px rgba(238,77,45,.18);
+  transition: 0.25s;
 }
 
-/* Button Shopee style */
-button{
-  background: linear-gradient(180deg, #EE4D2D, #ff6a43);
-  color:white;
-  border:none;
-  padding: 12px 22px;
-  margin-top: 14px;
-  border-radius: 12px;
-  cursor:pointer;
-  font-weight: 800;
-  font-size: 16px;
-  letter-spacing:.2px;
-  box-shadow: 0 8px 20px rgba(238,77,45,.28);
-  transition:.15s;
-}
-button:hover{
-  transform: translateY(-2px);
-  filter: brightness(1.05);
+textarea:focus {
+  border-color: #ff914d;
+  box-shadow: 0 0 15px rgba(255,140,60,0.35);
 }
 
-/* Status text */
-#status{
-  margin-top: 14px;
-  font-size: 15px;
-  color:#475569;
-  font-weight:600;
-}
-
-/* Table wrap */
-#result{
-  margin-top: 14px;
-  width:100%;
-}
-
-/* Table đẹp */
-table{
-  width:100%;
-  margin-top: 14px;
-  border-collapse: separate;
-  border-spacing:0;
-  background:white;
-  border-radius: 16px;
-  overflow:hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,.06);
-}
-
-/* Header table */
-th{
-  background:#f8fafc;
-  font-weight: 900;
-  font-size: 14px;
-  padding: 14px 12px;
-  border-bottom:1px solid #e2e8f0;
-  text-align:left;
-  color:#0f172a;
-  white-space: nowrap;
-}
-
-/* Cell */
-td{
-  padding: 14px 12px;
-  font-size: 15px;      /* chữ to hơn */
-  border-bottom:1px solid #f1f5f9;
-  vertical-align: middle;
-}
-
-/* Hover row */
-tr:hover{
-  background:#fff6f3;
-}
-
-/* Ảnh sản phẩm */
-td img{
-  width: 46px;
-  height: 46px;
-  object-fit: cover;
-  border-radius: 10px;
-  border:1px solid #e5e7eb;
-  box-shadow: 0 3px 10px rgba(0,0,0,.08);
-}
-
-/* Cột địa chỉ tự xuống dòng đẹp */
-td[title]{
-  max-width: 420px;
-  white-space: normal;
-  word-break: break-word;
-  line-height: 1.35;
-}
-
-/* Nút và khu nhập nằm gọn ở giữa */
-textarea, button, #status, #result{
-  display:block;
-}
-
-/* Mobile responsive */
-@media (max-width: 1024px){
-  #container{ padding: 22px; }
-  h2{ font-size: 24px; }
-  textarea{ font-size: 15px; min-height:150px; }
-  button{ font-size:15px; }
-  td, th{ font-size:14px; }
-}
-
-@media (max-width: 600px){
-  body{ padding: 10px; }
-  #container{ padding: 14px; border-radius: 14px; }
-  textarea{ min-height:140px; }
-  th, td{ padding: 10px; font-size:13px; }
-}
-
-/* ===== LOGO ===== */
-.logo-img {
-  width: 110px;
-  border-radius: 12px;
-  display: block;
-  margin: 0 auto 20px;
-}
-.donate-text {
-  text-align: center;
-  font-size: 17px;
-  font-weight: 600;
-  color: #ff5722;
-  margin-top: -5px;
-  margin-bottom: 20px;
-}
-.donate-text {
-  text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  color: #ff5722;
-  margin-top: -5px;
-  margin-bottom: 8px;
-}
-
-.donate-bank {
-  text-align: center;
-  font-size: 15px;
-  font-weight: 600;
-  color: #444;
-  margin-bottom: 22px;
-  line-height: 1.5;
-}
-
-<<<<<<< HEAD
-/* Hàng chứa 2 nút */
+/* =========================================
+   NÚT – hover đẹp, glow
+========================================= */
 .btn-row {
   display: flex;
-  justify-content: space-between; /* Zalo sang trái – Check sang phải */
+  justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
-/* Nút Zalo */
+/* ZALO BTN */
 .btn-zalo {
-  padding: 10px 22px;
-  background: #0084ff;
-  color: white;
-  border-radius: 10px;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #0095ff, #006fe0);
+  border-radius: 14px;
+  color: #fff;
   font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 18px rgba(0, 132, 255, 0.45);
+  transition: 0.25s;
 }
 
-/* Nút Check (giữ style cũ) */
+.btn-zalo:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 10px 26px rgba(0, 143, 255, 0.65);
+}
+
+/* CHECK BTN */
 .btn-check {
-  padding: 10px 26px;
-  font-size: 16px;
+  padding: 14px 34px;
+  background: linear-gradient(135deg, #ff6a28, #ff3d00);
+  border-radius: 14px;
+  color: #fff;
   font-weight: 600;
   border: none;
-  border-radius: 10px;
-  background: #ff5722;
-  color: white;
   cursor: pointer;
-  transition: 0.2s;
+  box-shadow: 0 8px 18px rgba(255, 80, 30, 0.45);
+  transition: 0.25s;
 }
 
 .btn-check:hover {
-  background: #ff6a39;
-}
-=======
-.donate-text {
-  text-align: center;
-  font-size: 20px;
-  font-weight: 700;
-  color: #d9534f;
-  margin-top: 10px;
-  margin-bottom: 5px;
+  transform: translateY(-4px) scale(1.07);
+  box-shadow: 0 10px 26px rgba(255, 65, 0, 0.7);
 }
 
-.donate-bank {
-  text-align: center;
-  font-size: 16px;
-  font-weight: 500;
-  color: #444;
-  margin-bottom: 25px;
-  line-height: 1.5;
+/* =========================================
+   LOADING ANIMATION – “Đang lấy đơn…”
+========================================= */
+#status.loading::after {
+  content: "⌛";
+  margin-left: 8px;
+  animation: spin 0.7s linear infinite;
 }
 
->>>>>>> bdf778f695d31887785658a5b587731200ab754a
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* =========================================
+   TABLE – đẹp hơn
+========================================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(6px);
+  border-radius: 16px;
+  overflow: hidden;
+
+  box-shadow:
+     0 4px 20px rgba(0,0,0,0.25),
+     inset 0 0 20px rgba(255,255,255,0.05);
+}
+
+thead {
+  background: rgba(255,255,255,0.15);
+}
+
+th, td {
+  padding: 14px;
+  font-size: 15px;
+  color: #e2e8f0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+tr:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+.productImg {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: solid 2px rgba(255,255,255,0.3);
+}
