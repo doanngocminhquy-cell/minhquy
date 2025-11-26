@@ -52,7 +52,7 @@
       100% { transform: scale(1); opacity: 0.9; }
     }
 
-    /* ===== DÂY ĐÈN NOEL TRÊN CÙNG ===== */
+    /* ===== DÂY ĐÈN NOEL ===== */
     .christmas-lights {
       position: fixed;
       top: 0;
@@ -168,7 +168,10 @@
       box-shadow: 0 5px 18px rgba(255, 87, 34, 0.45);
       transition: .2s;
     }
-    .btn-check:hover { transform: translateY(-2px); }
+
+    .btn-check:hover {
+      transform: translateY(-2px);
+    }
 
     #status {
       margin-top: 20px;
@@ -217,12 +220,11 @@
 
   <!-- DÂY ĐÈN TREO -->
   <div class="christmas-lights">
-  <span></span><span></span><span></span><span></span><span></span>
-  <span></span><span></span><span></span><span></span><span></span>
-  <span></span><span></span><span></span><span></span><span></span>
-  <span></span><span></span><span></span><span></span><span></span>
-</div>
-
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
 
   <!-- CÂY THÔNG BÊN TRÁI + PHẢI -->
   <img src="https://i.imgur.com/Eq0TsTw.png" class="tree-left" />
@@ -247,9 +249,10 @@
     setInterval(createSnow, 60);
   </script>
 
+  <!-- MAIN CONTENT -->
   <div id="container">
 
-    <img src="./logo.png" class="logo-img">
+    <img src="./logo.png" class="logo-img" alt="logo">
 
     <p style="text-align:center;margin:0;">❤️ <b>Chung tay ủng hộ đồng bào vùng lũ miền Trung</b> ❤️</p>
     <p style="text-align:center;margin:6px 0 20px;">
