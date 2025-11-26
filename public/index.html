@@ -1,199 +1,283 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Tra cứu đơn hàng Shopee – Minh Quý</title>
 
   <style>
-    /* ===== BACKGROUND GIÁNG SINH ===== */
+    /* =====================================================
+        🎄 BACKGROUND NOEL – GRADIENT & CHUYỂN MÀU
+    ====================================================== */
     body {
       margin: 0;
       padding: 0;
       font-family: "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top, #b91c1c 0%, #7f1d1d 35%, #111827 100%);
-      color: #f9fafb;
+      background: linear-gradient(160deg, #9b1c1c, #4b0f2a, #1a1b32);
+      background-size: 300% 300%;
+      animation: bgMove 12s ease infinite;
+      color: #f8fafc;
       overflow-x: hidden;
     }
+    @keyframes bgMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-    /* ===== TUYẾT RƠI ===== */
+    /* =====================================================
+        🎄 CÂY THÔNG 2 BÊN + ĐÈN CHỚP
+    ====================================================== */
+    .tree {
+      position: fixed;
+      width: 110px;
+      bottom: 20px;
+      z-index: 10;
+      filter: drop-shadow(0 0 12px rgba(255,255,255,0.7));
+      animation: pulse 2.5s infinite ease-in-out;
+    }
+    .tree-left { left: 20px; }
+    .tree-right { right: 20px; }
+
+    @keyframes pulse {
+      0% { transform: scale(1); filter: brightness(0.9); }
+      50% { transform: scale(1.05); filter: brightness(1.2); }
+      100% { transform: scale(1); filter: brightness(0.9); }
+    }
+
+    /* ĐÈN CHỚP TRÊN CÂY */
+    .tree-light {
+      position: fixed;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: yellow;
+      box-shadow: 0 0 10px yellow;
+      animation: blink 0.7s infinite;
+      z-index: 11;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 0.2; transform: scale(0.7); }
+      50% { opacity: 1; transform: scale(1.4); }
+    }
+
+    /* =====================================================
+        🎅 SANTA CHẠY NGANG
+    ====================================================== */
+    .santa {
+      position: fixed;
+      top: 40px;
+      left: -200px;
+      width: 180px;
+      z-index: 9999;
+      animation: santaMove 14s linear infinite;
+      filter: drop-shadow(0 0 10px white);
+    }
+    @keyframes santaMove {
+      0% { left: -250px; transform: scale(1); }
+      50% { left: 100%; transform: scale(1.1); }
+      100% { left: -250px; transform: scale(1); }
+    }
+
+    /* =====================================================
+        ❄ TUYẾT ĐỔI MÀU
+    ====================================================== */
     .snow {
       position: fixed;
       top: -20px;
       pointer-events: none;
       animation: fall linear forwards;
-      color: white;
-      z-index: 9999;
+      z-index: 999;
+      font-weight: bold;
     }
-
     @keyframes fall {
-      to {
-        transform: translateY(120vh) rotate(360deg);
-        opacity: 0;
-      }
+      to { transform: translateY(120vh) rotate(360deg); opacity: 0; }
     }
 
-    /* ===== CÂY THÔNG 2 BÊN ===== */
-    .tree-left, .tree-right {
-      position: fixed;
-      width: 110px;
-      bottom: 20px;
-      filter: drop-shadow(0 0 12px rgba(255,255,255,0.6));
-      z-index: 9000;
-      animation: pulse 2.2s infinite ease-in-out;
+    /* ĐỔI MÀU TUYẾT */
+    @keyframes snowColor {
+      0% { color: #ffffff; }
+      33% { color: #b3e5fc; }
+      66% { color: #ffe4e6; }
+      100% { color: #ffffff; }
     }
 
-    .tree-left { left: 20px; }
-    .tree-right { right: 20px; }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.05); opacity: 1; }
-      100% { transform: scale(1); opacity: 0.9; }
-    }
-
-    /* ===== CONTAINER ===== */
+    /* =====================================================
+        CONTAINER CHÍNH
+    ====================================================== */
     #container {
       max-width: 1050px;
-      margin: 50px auto;
-      background: rgba(15,23,42,0.96);
-      padding: 30px 40px;
-      border-radius: 20px;
-      border: 4px solid #facc15;
-      box-shadow: 0 0 40px rgba(248,250,252,0.2);
+      margin: 60px auto;
+      background: rgba(15,23,42,0.95);
+      padding: 35px 45px;
+      border-radius: 24px;
+      border: 3px solid #facc15;
+      box-shadow:
+        0 10px 40px rgba(0,0,0,0.4),
+        inset 0 0 30px rgba(255,255,255,0.08);
+      animation: fadeUp 1.2s ease;
+    }
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(40px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
-    /* LOGO */
+    /* Logo */
     .logo-img {
       width: 120px;
-      display: block;
-      margin: 0 auto 15px;
       border-radius: 999px;
-      box-shadow: 0 0 25px rgba(255,255,255,0.35);
+      display: block;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 25px rgba(255,255,255,0.4);
     }
 
+    /* Tiêu đề neon */
     h2 {
       text-align: center;
-      font-size: 32px;
-      font-weight: 700;
-      margin: 10px 0 20px;
-      color: #fef08a;
-      text-shadow: 0 0 8px rgba(255,255,255,0.5);
+      font-size: 34px;
+      font-weight: 800;
+      color: #fff8b3;
+      text-shadow:
+        0 0 8px rgba(255,255,255,0.6),
+        0 0 16px rgba(255,200,80,0.7),
+        0 0 30px rgba(255,180,50,0.6);
     }
 
     textarea {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       background: #0f172a;
-      color: white;
-      border-radius: 10px;
+      border-radius: 12px;
       border: 2px solid #fca5a5;
-      font-size: 15px;
+      color: white;
       resize: vertical;
     }
 
-    /* ===== NÚT ZALO + CHECK ===== */
     .btn-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
       margin-top: 15px;
     }
 
     .btn-zalo {
       padding: 12px 24px;
       background: #0284c7;
-      border-radius: 12px;
       color: white;
-      font-weight: 600;
+      border-radius: 12px;
       text-decoration: none;
-      box-shadow: 0 5px 18px rgba(0, 150, 255, 0.5);
-      transition: .2s;
+      font-weight: 600;
+      transition: 0.25s;
     }
-    .btn-zalo:hover { transform: translateY(-2px); }
+    .btn-zalo:hover {
+      box-shadow: 0 0 18px #0284c7;
+      transform: translateY(-3px);
+    }
 
     .btn-check {
       padding: 12px 28px;
       background: #ff5722;
-      border-radius: 12px;
       color: white;
-      font-weight: 600;
+      border-radius: 12px;
       border: none;
       cursor: pointer;
-      box-shadow: 0 5px 18px rgba(255, 87, 34, 0.45);
-      transition: .2s;
+      font-weight: 600;
+      transition: 0.25s;
     }
     .btn-check:hover {
-      transform: translateY(-2px);
+      box-shadow: 0 0 18px #ff5722;
+      transform: translateY(-3px);
     }
 
-    #status {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
+    /* =====================================================
+        🔔 LOADING ANIMATION ĐẸP
+    ====================================================== */
+    #status.loading::after {
+      content: " 🔔 ";
+      animation: ring 0.8s infinite ease-in-out;
+      display: inline-block;
+    }
+    @keyframes ring {
+      0%,100% { transform: rotate(0deg); }
+      50% { transform: rotate(20deg); }
     }
 
-    /* TABLE */
+    /* =====================================================
+        TABLE
+    ====================================================== */
     table {
       width: 100%;
-      border-collapse: collapse;
       margin-top: 25px;
+      border-collapse: collapse;
       background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(4px);
       border-radius: 12px;
       overflow: hidden;
     }
 
-    thead {
-      background: rgba(255,255,255,0.15);
-    }
+    thead { background: rgba(255,255,255,0.12); }
 
-    th, td {
+    td, th {
       padding: 12px;
-      font-size: 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      color: #f1f5f9;
+      color: #e2e8f0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
 
     tr:hover {
-      background: rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.08);
     }
 
-    img.productImg {
+    .productImg {
       width: 46px;
       height: 46px;
-      object-fit: cover;
       border-radius: 8px;
-      border: 1px solid #ddd;
+      object-fit: cover;
     }
   </style>
 </head>
+
 <body>
 
-  <!-- Cây thông Noel -->
-  <img src="https://cdn-icons-png.flaticon.com/512/1998/1998619.png" class="tree-left" />
-  <img src="https://cdn-icons-png.flaticon.com/512/1998/1998619.png" class="tree-right" />
+  <!-- 🎅 Santa chạy ngang -->
+  <img class="santa" src="https://cdn-icons-png.flaticon.com/512/1216/1216928.png">
 
-  <!-- TUYẾT -->
+  <!-- 🎄 Cây thông -->
+  <img src="https://cdn-icons-png.flaticon.com/512/1998/1998619.png" class="tree tree-left">
+  <img src="https://cdn-icons-png.flaticon.com/512/1998/1998619.png" class="tree tree-right">
+
+  <!-- Đèn Noel chớp -->
+  <script>
+    function createTreeLight() {
+      const light = document.createElement("div");
+      light.className = "tree-light";
+
+      const side = Math.random() > 0.5 ? "left" : "right";
+      const x = side === "left" ? 30 + Math.random() * 60 : window.innerWidth - 30 - Math.random() * 60;
+      const y = window.innerHeight - 130 - Math.random() * 80;
+
+      light.style.left = x + "px";
+      light.style.top = y + "px";
+
+      document.body.appendChild(light);
+      setTimeout(() => light.remove(), 1500);
+    }
+    setInterval(createTreeLight, 300);
+  </script>
+
+  <!-- ❄ TUYẾT ĐỔI MÀU -->
   <script>
     function createSnow() {
       const snow = document.createElement("div");
       snow.classList.add("snow");
-      snow.textContent = Math.random() > 0.5 ? "❄" : "✼";
-
+      snow.textContent = ["❄","✼","✻","✵"][Math.floor(Math.random()*4)];
       snow.style.left = Math.random() * window.innerWidth + "px";
-      snow.style.animationDuration = 2 + Math.random() * 4 + "s";
-      snow.style.opacity = Math.random() * 0.9 + 0.1;
-      snow.style.fontSize = Math.random() * 12 + 10 + "px";
-
+      snow.style.fontSize = 10 + Math.random() * 16 + "px";
+      snow.style.animationDuration = 3 + Math.random() * 4 + "s";
+      snow.style.animation = "fall linear forwards, snowColor 3s infinite";
       document.body.appendChild(snow);
       setTimeout(() => snow.remove(), 8000);
     }
-
-    setInterval(createSnow, 60);
+    setInterval(createSnow, 55);
   </script>
 
+  <!-- CONTAINER -->
   <div id="container">
 
     <img src="./logo.png" class="logo-img" alt="logo">
@@ -201,7 +285,7 @@
     <p style="text-align:center;margin:0;">
       ❤️ <b>Chung tay ủng hộ đồng bào vùng lũ miền Trung</b> ❤️
     </p>
-    <p style="text-align:center;margin:6px 0 20px;">
+    <p style="text-align:center;margin:6px 0 18px;">
       <b>Số tài khoản:</b> 8888881010 – <b>VCB</b><br>
       Mặt Trận Tổ Quốc Việt Nam – Ban Cứu Trợ Trung Ương
     </p>
@@ -217,9 +301,11 @@
 
     <div id="status"></div>
     <div id="result"></div>
-
   </div>
 
+  <!-- =====================================================
+        JS CHECK ĐƠN HÀNG (KHÔNG THAY ĐỔI)
+  ====================================================== -->
   <script>
     async function go() {
       const cookies = document.getElementById("cookieBox").value
@@ -230,7 +316,8 @@
       const status = document.getElementById("status");
       const result = document.getElementById("result");
 
-      status.textContent = "Đang lấy đơn...";
+      status.textContent = "Đang lấy đơn";
+      status.classList.add("loading");
       result.innerHTML = "";
 
       const res = await fetch("/api/orders", {
@@ -240,19 +327,21 @@
       });
 
       let data;
-      try {
-        data = await res.json();
-      } catch (e) {
+      try { data = await res.json(); }
+      catch (e) {
         status.textContent = "Lỗi: Server không trả JSON.";
+        status.classList.remove("loading");
         return;
       }
 
       if (!res.ok) {
         status.textContent = "Lỗi: " + (data.error || "unknown");
+        status.classList.remove("loading");
         return;
       }
 
       status.textContent = `Có ${data.count - 1} đơn`;
+      status.classList.remove("loading");
 
       const rows = (data.orders || []).map(o => `
         <tr>
@@ -262,7 +351,7 @@
           <td>${o.receiver}</td>
           <td>${o.receiverPhone}</td>
           <td title="${o.address}">${o.address}</td>
-          <td>${o.productImg ? `<img src="${o.productImg}" class="productImg"/>` : "—"}</td>
+          <td>${o.productImg ? `<img src="${o.productImg}" class="productImg">` : "—"}</td>
           <td>${o.shipperName || "—"}</td>
           <td>${o.shipperPhone || "—"}</td>
         </tr>
