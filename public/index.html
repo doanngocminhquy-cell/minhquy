@@ -2,115 +2,182 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Tra cứu đơn Shopee – Minh Quý</title>
-  <link rel="stylesheet" href="style.css">
-
-
-  <!-- FLOATING ACTION BUTTONS -->
-<div class="floating-buttons">
-  
-  
-</div>
+  <title>Tra cứu đơn hàng Shopee – Minh Quý</title>
 
   <style>
-      
-
-    
+    /* ===== BACKGROUND GIÁNG SINH ===== */
     body {
-      background: #f4f6fb;
-      font-family: "Segoe UI", sans-serif;
       margin: 0;
       padding: 0;
+      font-family: "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #b91c1c 0%, #7f1d1d 35%, #111827 100%);
+      color: #f9fafb;
+      overflow-x: hidden;
     }
 
+    /* ===== TUYẾT RƠI ===== */
+    .snow {
+      position: fixed;
+      top: -20px;
+      pointer-events: none;
+      animation: fall linear forwards;
+      color: white;
+      z-index: 9999;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(120vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* ===== CÂY THÔNG 2 BÊN ===== */
+    .tree-left, .tree-right {
+      position: fixed;
+      width: 110px;
+      bottom: 20px;
+      filter: drop-shadow(0 0 12px rgba(255,255,255,0.6));
+      z-index: 9000;
+      animation: pulse 2.2s infinite ease-in-out;
+    }
+
+    .tree-left { left: 20px; }
+    .tree-right { right: 20px; }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.9; }
+    }
+
+    /* ===== NÚT BẬT/TẮT NHẠC ===== */
+    .music-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.2);
+      padding: 10px 18px;
+      border: 2px solid #fff;
+      color: white;
+      font-weight: 700;
+      border-radius: 12px;
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+      z-index: 99999;
+      transition: 0.2s;
+    }
+    .music-btn:hover {
+      transform: scale(1.08);
+    }
+
+    /* ===== CONTAINER ===== */
     #container {
       max-width: 1050px;
-      margin: 40px auto;
-      background: #ffffff;
+      margin: 50px auto;
+      background: rgba(15,23,42,0.96);
       padding: 30px 40px;
       border-radius: 20px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      border: 4px solid #facc15;
+      box-shadow: 0 0 40px rgba(248,250,252,0.2);
     }
 
-    /* Logo */
+    /* LOGO */
     .logo-img {
-      width: 110px;
+      width: 120px;
       display: block;
       margin: 0 auto 15px;
-      border-radius: 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+      border-radius: 999px;
+      box-shadow: 0 0 25px rgba(255,255,255,0.35);
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 15px;
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 700;
-      color: #333;
+      margin: 10px 0 20px;
+      color: #fef08a;
+      text-shadow: 0 0 8px rgba(255,255,255,0.5);
     }
 
     textarea {
       width: 100%;
       padding: 12px;
-      font-size: 15px;
+      background: #0f172a;
+      color: white;
       border-radius: 10px;
-      border: 1px solid #d0d7e2;
-      outline: none;
+      border: 2px solid #fca5a5;
+      font-size: 15px;
       resize: vertical;
     }
 
-    button {
-      margin-top: 12px;
-      padding: 10px 26px;
-      font-size: 16px;
-      font-weight: 600;
-      border: none;
-      border-radius: 10px;
-      background: #ff5722;
-      color: white;
-      cursor: pointer;
-      display: block;
-      margin-left: auto;
-      transition: 0.2s;
+    /* ===== NÚT ZALO + CHECK ===== */
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
     }
 
-    button:hover {
-      background: #ff6a39;
+    .btn-zalo {
+      padding: 12px 24px;
+      background: #0284c7;
+      border-radius: 12px;
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 5px 18px rgba(0, 150, 255, 0.5);
+      transition: .2s;
+    }
+    .btn-zalo:hover { transform: translateY(-2px); }
+
+    .btn-check {
+      padding: 12px 28px;
+      background: #ff5722;
+      border-radius: 12px;
+      color: white;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 5px 18px rgba(255, 87, 34, 0.45);
+      transition: .2s;
+    }
+    .btn-check:hover {
+      transform: translateY(-2px);
     }
 
     #status {
       margin-top: 20px;
-      font-weight: bold;
-      font-size: 17px;
       text-align: center;
+      font-size: 18px;
+      font-weight: bold;
     }
 
+    /* TABLE */
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 25px;
-      background: white;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(4px);
       border-radius: 12px;
       overflow: hidden;
     }
 
     thead {
-      background: #eef1f8;
+      background: rgba(255,255,255,0.15);
     }
 
     th, td {
       padding: 12px;
-      border-bottom: 1px solid #e6e8ef;
       font-size: 14px;
-      text-align: left;
-    }
-
-    th {
-      font-weight: 700;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: #f1f5f9;
     }
 
     tr:hover {
-      background: #fafafa;
+      background: rgba(255,255,255,0.07);
     }
 
     img.productImg {
@@ -122,29 +189,61 @@
     }
   </style>
 </head>
-
 <body>
+
+  <!-- Cây thông Noel -->
+  <img src="https://i.imgur.com/7H4jJ2Y.png" class="tree-left" />
+  <img src="https://i.imgur.com/7H4jJ2Y.png" class="tree-right" />
+
+  <!-- Nhạc Giáng Sinh -->
+  <audio id="bg-music" loop autoplay>
+    <source src="https://cdn.pixabay.com/audio/2021/12/22/audio_0fa69376ef.mp3">
+  </audio>
+
+  <button class="music-btn" onclick="toggleMusic()">🔊 Nhạc</button>
+
+  <!-- TUYẾT -->
+  <script>
+    function createSnow() {
+      const snow = document.createElement("div");
+      snow.classList.add("snow");
+      snow.textContent = Math.random() > 0.5 ? "❄" : "✼";
+
+      snow.style.left = Math.random() * window.innerWidth + "px";
+      snow.style.animationDuration = 2 + Math.random() * 4 + "s";
+      snow.style.opacity = Math.random() * 0.9 + 0.1;
+      snow.style.fontSize = Math.random() * 12 + 10 + "px";
+
+      document.body.appendChild(snow);
+      setTimeout(() => snow.remove(), 8000);
+    }
+
+    /* ❄ Tăng mật độ tuyết */
+    setInterval(createSnow, 60);
+
+    function toggleMusic() {
+      const m = document.getElementById("bg-music");
+      if (m.paused) m.play();
+      else m.pause();
+    }
+  </script>
 
   <div id="container">
 
-    <!-- LOGO -->
     <img src="./logo.png" class="logo-img" alt="logo">
 
-    <!-- KÊU GỌI ỦNG HỘ -->
-    <p class="donate-text">
-      ❤️ Chung tay ủng hộ đồng bào vùng lũ miền Trung ❤️
+    <p style="text-align:center;margin:0;">
+      ❤️ <b>Chung tay ủng hộ đồng bào vùng lũ miền Trung</b> ❤️
     </p>
-
-    <p class="donate-bank">
+    <p style="text-align:center;margin:6px 0 20px;">
       <b>Số tài khoản:</b> 8888881010 – <b>VCB</b><br>
       Mặt Trận Tổ Quốc Việt Nam – Ban Cứu Trợ Trung Ương
     </p>
 
-    <h2>Tra cứu đơn hàng Shopee – Minh Quý</h2>
+    <h2>Tra cứu đơn hàng Shopee – Minh Quý 🎄</h2>
 
     <textarea id="cookieBox" rows="6" placeholder="Dán cookie SPC_ST=... vào đây"></textarea>
 
-    <!-- HÀNG NÚT (Zalo trái – Check phải) -->
     <div class="btn-row">
       <a href="https://zalo.me/g/rsasqo212" class="btn-zalo">Nhóm ZALO Đặt Đơn</a>
       <button onclick="go()" class="btn-check">Check</button>
@@ -152,9 +251,8 @@
 
     <div id="status"></div>
     <div id="result"></div>
-  </div>
-</body>
 
+  </div>
 
   <script>
     async function go() {
@@ -169,7 +267,6 @@
       status.textContent = "Đang lấy đơn...";
       result.innerHTML = "";
 
-      // ✅ ĐỔI THÀNH RELATIVE PATH để chạy public
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -189,7 +286,7 @@
         return;
       }
 
-      status.textContent = `Có ${data.count} đơn`;
+      status.textContent = `Có ${data.count - 2} đơn`;
 
       const rows = (data.orders || []).map(o => `
         <tr>
@@ -225,5 +322,6 @@
       `;
     }
   </script>
+
 </body>
 </html>
