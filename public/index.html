@@ -52,26 +52,6 @@
       100% { transform: scale(1); opacity: 0.9; }
     }
 
-    /* ===== NÚT BẬT/TẮT NHẠC ===== */
-    .music-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(255,255,255,0.2);
-      padding: 10px 18px;
-      border: 2px solid #fff;
-      color: white;
-      font-weight: 700;
-      border-radius: 12px;
-      backdrop-filter: blur(6px);
-      cursor: pointer;
-      z-index: 99999;
-      transition: 0.2s;
-    }
-    .music-btn:hover {
-      transform: scale(1.08);
-    }
-
     /* ===== CONTAINER ===== */
     #container {
       max-width: 1050px;
@@ -192,11 +172,10 @@
 <body>
 
   <!-- Cây thông Noel -->
-  <img src="https://i.imgur.com/7H4jJ2Y.png" class="tree-left" />
-  <img src="https://i.imgur.com/7H4jJ2Y.png" class="tree-right" />
+  <img src="https://cdn-icons-png.flaticon.com/512/1998/1998619.png" class="tree-left" />
+  <img src="https://cdn-icons-png.flaticon.com/512/1998/1998619.png" class="tree-right" />
 
-  <!-- Nhạc Giáng Sinh -->
-
+  <!-- TUYẾT -->
   <script>
     function createSnow() {
       const snow = document.createElement("div");
@@ -212,14 +191,7 @@
       setTimeout(() => snow.remove(), 8000);
     }
 
-    /* ❄ Tăng mật độ tuyết */
     setInterval(createSnow, 60);
-
-    function toggleMusic() {
-      const m = document.getElementById("bg-music");
-      if (m.paused) m.play();
-      else m.pause();
-    }
   </script>
 
   <div id="container">
