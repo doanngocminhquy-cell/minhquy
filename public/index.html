@@ -236,7 +236,9 @@
     function createSnow() {
       const snow = document.createElement("div");
       snow.classList.add("snow");
-      snow.textContent = Math.random() > 0.5 ? "✼ ✽ ✾ ✿ ❉ ❊ ✻ ✺ ✹ ✵ ✴" : "✼ ✽ ✾ ✿ ❉ ❊ ✻ ✺ ✹ ✵ ✴";
+     const snowChars = ["✼","✽","✾","✿","❉","❊","✻","✺","✹","✵","✴"];
+     snow.textContent = snowChars[Math.floor(Math.random() * snowChars.length)];
+
 
       snow.style.left = Math.random() * window.innerWidth + "px";
       snow.style.animationDuration = 2 + Math.random() * 4 + "s";
