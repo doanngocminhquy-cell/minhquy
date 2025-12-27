@@ -33,7 +33,7 @@
       }
     }
 
-    /* ===== CÂY THÔNG 2 BÊN (CÂY BẠN GỬI) ===== */
+    /* ===== CÂY THÔNG 2 BÊN ===== */
     .tree-left, .tree-right {
       position: fixed;
       width: 130px;
@@ -108,7 +108,6 @@
       box-shadow: 0 0 40px rgba(248,250,252,0.2);
     }
 
-    /* LOGO */
     .logo-img {
       width: 120px;
       display: block;
@@ -137,7 +136,6 @@
       resize: vertical;
     }
 
-    /* ===== NÚT ===== */
     .btn-row {
       display: flex;
       justify-content: space-between;
@@ -169,9 +167,7 @@
       transition: .2s;
     }
 
-    .btn-check:hover {
-      transform: translateY(-2px);
-    }
+    .btn-check:hover { transform: translateY(-2px); }
 
     #status {
       margin-top: 20px;
@@ -180,7 +176,6 @@
       font-weight: bold;
     }
 
-    /* TABLE */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -191,9 +186,7 @@
       overflow: hidden;
     }
 
-    thead {
-      background: rgba(255,255,255,0.15);
-    }
+    thead { background: rgba(255,255,255,0.15); }
 
     th, td {
       padding: 12px;
@@ -202,9 +195,7 @@
       color: #f1f5f9;
     }
 
-    tr:hover {
-      background: rgba(255,255,255,0.07);
-    }
+    tr:hover { background: rgba(255,255,255,0.07); }
 
     img.productImg {
       width: 46px;
@@ -218,7 +209,6 @@
 
 <body>
 
-  <!-- DÂY ĐÈN TREO -->
   <div class="christmas-lights">
     <span></span><span></span><span></span><span></span><span></span>
     <span></span><span></span><span></span><span></span><span></span>
@@ -226,35 +216,26 @@
     <span></span><span></span><span></span><span></span><span></span>
   </div>
 
-  <!-- CÂY THÔNG BÊN TRÁI + PHẢI -->
- <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Christmas_tree_icon.png" class="tree-left" />
-<img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Christmas_tree_icon.png" class="tree-right" />
+  <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Christmas_tree_icon.png" class="tree-left" />
+  <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Christmas_tree_icon.png" class="tree-right" />
 
-
-  <!-- TUYẾT -->
   <script>
     function createSnow() {
       const snow = document.createElement("div");
       snow.classList.add("snow");
-     const snowChars = ["✼","✽","✾","✿","❉","❊","✻","✺","✹","✵","✴"];
-     snow.textContent = snowChars[Math.floor(Math.random() * snowChars.length)];
-
-
+      const snowChars = ["✼","✽","✾","✿","❉","❊","✻","✺","✹","✵","✴"];
+      snow.textContent = snowChars[Math.floor(Math.random() * snowChars.length)];
       snow.style.left = Math.random() * window.innerWidth + "px";
       snow.style.animationDuration = 2 + Math.random() * 4 + "s";
       snow.style.opacity = Math.random() * 0.9 + 0.1;
       snow.style.fontSize = Math.random() * 12 + 10 + "px";
-
       document.body.appendChild(snow);
       setTimeout(() => snow.remove(), 8000);
     }
-
     setInterval(createSnow, 60);
   </script>
 
-  <!-- MAIN CONTENT -->
   <div id="container">
-
     <img src="./logo.png" class="logo-img" alt="logo">
 
     <p style="text-align:center;margin:0;">❤️ <b>Chung tay ủng hộ đồng bào vùng lũ miền Trung</b> ❤️</p>
@@ -274,7 +255,6 @@
 
     <div id="status"></div>
     <div id="result"></div>
-
   </div>
 
   <script>
@@ -344,6 +324,14 @@
         </table>
       `;
     }
+  </script>
+
+  <!-- ===== ADCASH AUTOTAG (CHỈ THÊM, KHÔNG SỬA CODE CŨ) ===== -->
+  <script src="https://static.adcash.com/resources/js/aclib.js"></script>
+  <script type="text/javascript">
+    aclib.runAutoTag({
+      zoneId: 'fvb75o92mg'
+    });
   </script>
 
 </body>
