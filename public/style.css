@@ -447,102 +447,43 @@ tr:hover {
   border: none !important;
 }
 
-/* CHỈ 1 SỢI DÂY LƯỢN SÓNG */
-.festoon::before{
-  content:"";
-  position:absolute;
+/* DÂY SVG LIỀN MẠCH (không gấp khúc) */
+.festoon{
+  position: fixed;
+  top: 0;
   left: 0;
-  right: 0;
-  top: 18px;
-  height: 64px;
+  width: 100%;
+  height: 150px;
+  pointer-events: none;
+  z-index: 99999;
 
-  background-repeat: repeat-x;
-  background-size: 360px 64px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  padding: 0 16px;
 
-  /* Wave nhẹ (lên xuống), KHÔNG võng sâu */
-  background-image: url("data:image/svg+xml;utf8,\
-  <svg xmlns='http://www.w3.org/2000/svg' width='360' height='64' viewBox='0 0 360 64'>\
-    <path d='M0,26 C45,10 90,42 135,26 C180,10 225,42 270,26 C315,10 360,42 405,26' \
-      fill='none' stroke='rgba(250,204,21,0.85)' stroke-width='3.2' stroke-linecap='round'/>\
-  </svg>");
+  border: none !important;
+}
+
+/* SVG nằm phía sau các item */
+.festoon-wire{
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 100%;
+  height: 70px;
+  z-index: 0;
+}
+
+.festoon-path{
+  fill: none;
+  stroke: rgba(250,204,21,0.9);
+  stroke-width: 4;
+  stroke-linecap: round;
   filter: drop-shadow(0 0 10px rgba(250,204,21,0.18));
 }
 
-/* ITEM TREO: tất cả đều treo dưới dây */
+/* đảm bảo item nằm trên dây */
 .festoon .item{
-  position: relative;
-  margin-top: 60px; /* đẩy xuống dưới dây => hết cảm giác "lồng đèn ngược" */
-  transform-origin: top center;
-  animation: swing 3.2s ease-in-out infinite;
-}
-
-/* dây treo (mỗi item có 1 sợi rơi xuống từ dây) */
-.festoon .item::before{
-  content:"";
-  position:absolute;
-  top: -28px;
-  left: 50%;
-  width: 2px;
-  height: 28px;
-  transform: translateX(-50%);
-  background: rgba(250,204,21,0.9);
-  opacity: 0.95;
-}
-
-/* lệch nhịp cho tự nhiên */
-.festoon .item:nth-child(odd){ animation-duration: 3.9s; }
-.festoon .item:nth-child(3n){ animation-duration: 2.7s; }
-
-/* ===== ĐÈN NHÁY: làm nổi hơn để không bị "mất" ===== */
-.festoon .light{
-  width: 18px;
-  height: 28px;
-  border-radius: 999px;
-  background: #facc15;
-  box-shadow:
-    0 0 14px rgba(255,255,255,0.85),
-    0 0 22px rgba(250,204,21,0.35);
-  animation:
-    blink 1.2s infinite alternate ease-in-out,
-    swing 3s ease-in-out infinite;
-}
-
-/* ===== LỒNG ĐÈN: bỏ dây treo cũ (để không bị "ngược") ===== */
-.festoon .lantern{
-  width: 46px;
-  height: 60px;
-  border-radius: 14px;
-  background: linear-gradient(180deg, #ef4444, #b91c1c);
-  border: 2px solid rgba(250,204,21,0.95);
-  box-shadow:
-    0 12px 22px rgba(0,0,0,0.25),
-    0 0 18px rgba(250,204,21,0.25);
-  position: relative;
-}
-
-/* tua rua CHỈ Ở DƯỚI (đúng chiều) */
-.festoon .lantern::after{
-  content:"";
-  position:absolute;
-  bottom: -18px;
-  left: 50%;
-  width: 14px;
-  height: 18px;
-  background: rgba(250,204,21,0.95);
-  border-radius: 0 0 10px 10px;
-  transform: translateX(-50%);
-  box-shadow: 0 0 10px rgba(250,204,21,0.25);
-}
-
-/* animation */
-@keyframes swing{
-  0%{ transform: rotate(-4deg); }
-  50%{ transform: rotate(4deg); }
-  100%{ transform: rotate(-4deg); }
-}
-
-@keyframes blink{
-  0%  { background:#dc2626; opacity:.65; transform: translateY(0px) scale(1); }
-  50% { background:#facc15; opacity:1;   transform: translateY(4px) scale(1.12); }
-  100%{ background:#4ade80; opacity:.75; transform: translateY(0px) scale(1); }
+  z-index: 1;
 }
