@@ -69,6 +69,31 @@
     setInterval(createLiXi, 400);
   </script>
 
+  <script>
+  function createFlower(type) {
+    const el = document.createElement("div");
+    el.className = type === "mai" ? "flower-mai" : "flower-dao";
+
+    el.style.left = Math.random() * window.innerWidth + "px";
+    el.style.animationDuration = (6 + Math.random() * 6) + "s";
+    el.style.opacity = (0.4 + Math.random() * 0.6).toFixed(2);
+
+    const scale = (0.6 + Math.random() * 0.6).toFixed(2);
+    const rotate = (Math.random() * 360).toFixed(2);
+    el.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 15000);
+  }
+
+  // MAI (vàng) – rất nhẹ
+  setInterval(() => createFlower("mai"), 1400);
+
+  // ĐÀO (hồng) – rất nhẹ
+  setInterval(() => createFlower("dao"), 1800);
+</script>
+
+
   <div id="container">
     <img src="./logo.png" class="logo-img" alt="logo" />
 
