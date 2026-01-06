@@ -4,246 +4,13 @@
   <meta charset="UTF-8" />
   <title>Tra cứu đơn hàng Shopee – Minh Quý</title>
 
-  <style>
-    /* ===== RESET ===== */
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", sans-serif; }
-
-    /* =========================================
-       BACKGROUND TẾT – vàng/đỏ ấm, giữ bố cục
-    ========================================= */
-    body {
-      margin: 0;
-      padding: 0;
-      background:
-        radial-gradient(circle at top, #ffdf6b 0%, #f59e0b 22%, #b91c1c 55%, #7f1d1d 78%, #111827 100%);
-      color: #f9fafb;
-      overflow-x: hidden;
-    }
-
-    /* =========================================
-       LÌ XÌ RƠI – thay tuyết rơi (không đổi layout)
-    ========================================= */
-    .lixi {
-      position: fixed;
-      top: -70px;
-      pointer-events: none;
-      z-index: 9999;
-
-      width: 42px;
-      height: 56px;
-      border-radius: 10px;
-
-      background: linear-gradient(180deg, #dc2626, #991b1b);
-      border: 2px solid rgba(250, 204, 21, 0.95);
-
-      box-shadow:
-        0 10px 22px rgba(0,0,0,0.35),
-        0 0 18px rgba(250,204,21,0.35);
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      animation: lixiFall linear forwards;
-      opacity: 1;
-    }
-
-    .lixi::before{
-      content: var(--char, "福");
-      font-weight: 900;
-      font-size: 18px;
-      color: #facc15;
-      text-shadow: 0 0 10px rgba(250, 204, 21, 0.55);
-    }
-
-    .lixi::after{
-      content: "";
-      position: absolute;
-      top: 6px;
-      width: 18px;
-      height: 10px;
-      border-radius: 6px;
-      background: rgba(250, 204, 21, 0.95);
-      box-shadow: 0 0 10px rgba(250,204,21,0.35);
-    }
-
-    @keyframes lixiFall {
-      to {
-        transform: translateY(120vh) rotate(380deg);
-        opacity: 0;
-      }
-    }
-
-    /* =========================================
-       “CÂY THÔNG 2 BÊN” -> đổi icon Tết (giữ class để không đổi bố cục)
-    ========================================= */
-    .tree-left, .tree-right {
-      position: fixed;
-      width: 130px;
-      bottom: 20px;
-      filter: drop-shadow(0 0 18px rgba(255,255,255,0.65));
-      z-index: 9000;
-      animation: pulse 2.4s infinite ease-in-out;
-      opacity: .95;
-    }
-    .tree-left { left: 25px; }
-    .tree-right { right: 25px; }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.05); opacity: 1; }
-      100% { transform: scale(1); opacity: 0.9; }
-    }
-
-    /* =========================================
-       DÂY ĐÈN – tông Tết đỏ/vàng (giữ bố cục)
-    ========================================= */
-    .christmas-lights {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 80px;
-      display: flex;
-      justify-content: space-around;
-      align-items: flex-start;
-      pointer-events: none;
-      z-index: 99999;
-    }
-
-    .christmas-lights span {
-      width: 16px;
-      height: 26px;
-      border-radius: 50%;
-      background: #dc2626;
-      margin-top: 10px;
-      animation: blink 1.4s infinite alternate ease-in-out;
-      filter: drop-shadow(0 0 8px rgba(255,255,255,0.9));
-    }
-
-    .christmas-lights span:nth-child(odd) { animation-duration: 1s; }
-    .christmas-lights span:nth-child(3n) { animation-duration: 1.8s; }
-
-    @keyframes blink {
-      0%   { transform: translateY(0px) scale(1); opacity: 0.55; background: #dc2626; }
-      50%  { transform: translateY(6px) scale(1.15); opacity: 1;   background: #facc15; }
-      100% { transform: translateY(0px) scale(1); opacity: 0.65; background: #fb7185; }
-    }
-
-    /* =========================================
-       CONTAINER – giữ nguyên bố cục, chỉ giữ style đẹp
-    ========================================= */
-    #container {
-      max-width: 1050px;
-      margin: 50px auto;
-      background: rgba(15,23,42,0.96);
-      padding: 30px 40px;
-      border-radius: 20px;
-      border: 4px solid #facc15;
-      box-shadow: 0 0 40px rgba(248,250,252,0.2);
-    }
-
-    .logo-img {
-      width: 120px;
-      display: block;
-      margin: 0 auto 15px;
-      border-radius: 999px;
-      box-shadow: 0 0 25px rgba(255,255,255,0.35);
-    }
-
-    h2 {
-      text-align: center;
-      font-size: 32px;
-      font-weight: 700;
-      margin: 10px 0 20px;
-      color: #fef08a;
-      text-shadow: 0 0 8px rgba(255,255,255,0.6);
-    }
-
-    textarea {
-      width: 100%;
-      padding: 12px;
-      background: #0f172a;
-      color: white;
-      border-radius: 10px;
-      border: 2px solid #fca5a5;
-      font-size: 15px;
-      resize: vertical;
-    }
-
-    .btn-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 15px;
-    }
-
-    .btn-zalo {
-      padding: 12px 24px;
-      background: #0284c7;
-      border-radius: 12px;
-      color: white;
-      font-weight: 600;
-      text-decoration: none;
-      box-shadow: 0 5px 18px rgba(0, 150, 255, 0.5);
-      transition: .2s;
-    }
-    .btn-zalo:hover { transform: translateY(-2px); }
-
-    .btn-check {
-      padding: 12px 28px;
-      background: #ff5722;
-      border-radius: 12px;
-      color: white;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 5px 18px rgba(255, 87, 34, 0.45);
-      transition: .2s;
-    }
-    .btn-check:hover { transform: translateY(-2px); }
-
-    #status {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 25px;
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(4px);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    thead { background: rgba(255,255,255,0.15); }
-
-    th, td {
-      padding: 12px;
-      font-size: 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      color: #f1f5f9;
-    }
-
-    tr:hover { background: rgba(255,255,255,0.07); }
-
-    img.productImg {
-      width: 46px;
-      height: 46px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-    }
-  </style>
+  <!-- CSS TÁCH RIÊNG -->
+  <link rel="stylesheet" href="./style.css" />
 </head>
 
 <body>
 
-  <!-- DÂY ĐÈN -->
+  <!-- DÂY ĐÈN (GIỮ BỐ CỤC, ĐỔI MÀU TRONG CSS SANG TẾT) -->
   <div class="christmas-lights">
     <span></span><span></span><span></span><span></span><span></span>
     <span></span><span></span><span></span><span></span><span></span>
@@ -251,7 +18,7 @@
     <span></span><span></span><span></span><span></span><span></span>
   </div>
 
-  <!-- ICON TẾT 2 BÊN (đèn lồng) – giữ nguyên class để không đổi bố cục -->
+  <!-- 2 BÊN: ĐỔI CÂY THÔNG -> ĐÈN LỒNG (GIỮ class tree-left/right KHÔNG ĐỔI BỐ CỤC) -->
   <img
     src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Red_lantern_icon.svg/512px-Red_lantern_icon.svg.png"
     class="tree-left"
@@ -263,44 +30,48 @@
     alt="lantern-right"
   />
 
-  <!-- LÌ XÌ RƠI SCRIPT -->
+  <!-- LÌ XÌ RƠI (THAY tuyết rơi) -->
   <script>
     function createLiXi() {
       const el = document.createElement("div");
       el.className = "lixi";
 
-      const chars = ["福","禄","寿","TẾT","LỘC","PHÁT","TÀI"];
+      // chữ random trên bao lì xì
+      const chars = ["福", "禄", "寿", "TẾT", "LỘC", "PHÁT", "TÀI"];
       el.style.setProperty("--char", `"${chars[Math.floor(Math.random() * chars.length)]}"`);
 
+      // vị trí ngang
       el.style.left = Math.random() * window.innerWidth + "px";
+
+      // tốc độ rơi
       el.style.animationDuration = (3 + Math.random() * 5) + "s";
 
       // xoay + scale
       const tilt = (Math.random() * 50 - 25).toFixed(2);
-      const scale = (0.8 + Math.random() * 0.65).toFixed(2);
+      const scale = (0.85 + Math.random() * 0.6).toFixed(2);
       el.style.transform = `rotate(${tilt}deg) scale(${scale})`;
 
-      // đậm nhạt nhẹ
+      // đậm nhạt
       el.style.opacity = (0.55 + Math.random() * 0.45).toFixed(2);
 
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 10000);
     }
 
-    // mật độ lì xì: giảm số xuống (vd 120) nếu muốn thưa hơn
+    // mật độ lì xì: tăng số lên (vd 120) nếu muốn thưa hơn
     setInterval(createLiXi, 80);
   </script>
 
-  <!-- MAIN -->
   <div id="container">
-    <img src="./logo.png" class="logo-img" alt="logo">
+    <img src="./logo.png" class="logo-img" alt="logo" />
 
     <p style="text-align:center;margin:0;">❤️ <b>Chung tay ủng hộ đồng bào vùng lũ miền Trung</b> ❤️</p>
     <p style="text-align:center;margin:6px 0 20px;">
-      <b>Số tài khoản:</b> 8888881010 – <b>VCB</b><br>
+      <b>Số tài khoản:</b> 8888881010 – <b>VCB</b><br />
       Mặt Trận Tổ Quốc Việt Nam – Ban Cứu Trợ Trung Ương
     </p>
 
+    <!-- ĐỔI ICON TIÊU ĐỀ SANG TẾT -->
     <h2>Tra cứu đơn hàng Shopee – Minh Quý 🧧</h2>
 
     <textarea id="cookieBox" rows="6" placeholder="Dán cookie SPC_ST=... vào đây"></textarea>
