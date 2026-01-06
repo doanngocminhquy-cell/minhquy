@@ -1,51 +1,91 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-
-
-
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Tra cứu đơn hàng Shopee – Minh Quý</title>
 
   <style>
-    /* ===== BACKGROUND GIÁNG SINH ===== */
+    /* ===== RESET ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", sans-serif; }
+
+    /* =========================================
+       BACKGROUND TẾT – vàng/đỏ ấm, giữ bố cục
+    ========================================= */
     body {
       margin: 0;
       padding: 0;
-      font-family: "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top, #b91c1c 0%, #7f1d1d 35%, #111827 100%);
+        radial-gradient(circle at top, #ffdf6b 0%, #f59e0b 22%, #b91c1c 55%, #7f1d1d 78%, #111827 100%);
       color: #f9fafb;
       overflow-x: hidden;
     }
 
-    /* ===== TUYẾT RƠI ===== */
-    .snow {
+    /* =========================================
+       LÌ XÌ RƠI – thay tuyết rơi (không đổi layout)
+    ========================================= */
+    .lixi {
       position: fixed;
-      top: -20px;
+      top: -70px;
       pointer-events: none;
-      animation: fall linear forwards;
-      color: white;
       z-index: 9999;
+
+      width: 42px;
+      height: 56px;
+      border-radius: 10px;
+
+      background: linear-gradient(180deg, #dc2626, #991b1b);
+      border: 2px solid rgba(250, 204, 21, 0.95);
+
+      box-shadow:
+        0 10px 22px rgba(0,0,0,0.35),
+        0 0 18px rgba(250,204,21,0.35);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      animation: lixiFall linear forwards;
+      opacity: 1;
     }
 
-    @keyframes fall {
+    .lixi::before{
+      content: var(--char, "福");
+      font-weight: 900;
+      font-size: 18px;
+      color: #facc15;
+      text-shadow: 0 0 10px rgba(250, 204, 21, 0.55);
+    }
+
+    .lixi::after{
+      content: "";
+      position: absolute;
+      top: 6px;
+      width: 18px;
+      height: 10px;
+      border-radius: 6px;
+      background: rgba(250, 204, 21, 0.95);
+      box-shadow: 0 0 10px rgba(250,204,21,0.35);
+    }
+
+    @keyframes lixiFall {
       to {
-        transform: translateY(120vh) rotate(360deg);
+        transform: translateY(120vh) rotate(380deg);
         opacity: 0;
       }
     }
 
-    /* ===== CÂY THÔNG 2 BÊN ===== */
+    /* =========================================
+       “CÂY THÔNG 2 BÊN” -> đổi icon Tết (giữ class để không đổi bố cục)
+    ========================================= */
     .tree-left, .tree-right {
       position: fixed;
       width: 130px;
       bottom: 20px;
-      filter: drop-shadow(0 0 18px rgba(255,255,255,0.8));
+      filter: drop-shadow(0 0 18px rgba(255,255,255,0.65));
       z-index: 9000;
       animation: pulse 2.4s infinite ease-in-out;
+      opacity: .95;
     }
-
     .tree-left { left: 25px; }
     .tree-right { right: 25px; }
 
@@ -55,7 +95,9 @@
       100% { transform: scale(1); opacity: 0.9; }
     }
 
-    /* ===== DÂY ĐÈN NOEL ===== */
+    /* =========================================
+       DÂY ĐÈN – tông Tết đỏ/vàng (giữ bố cục)
+    ========================================= */
     .christmas-lights {
       position: fixed;
       top: 0;
@@ -73,7 +115,7 @@
       width: 16px;
       height: 26px;
       border-radius: 50%;
-      background: red;
+      background: #dc2626;
       margin-top: 10px;
       animation: blink 1.4s infinite alternate ease-in-out;
       filter: drop-shadow(0 0 8px rgba(255,255,255,0.9));
@@ -83,24 +125,14 @@
     .christmas-lights span:nth-child(3n) { animation-duration: 1.8s; }
 
     @keyframes blink {
-      0% {
-        transform: translateY(0px) scale(1);
-        opacity: 0.5;
-        background: #ef4444;
-      }
-      50% {
-        transform: translateY(6px) scale(1.15);
-        opacity: 1;
-        background: #facc15;
-      }
-      100% {
-        transform: translateY(0px) scale(1);
-        opacity: 0.6;
-        background: #4ade80;
-      }
+      0%   { transform: translateY(0px) scale(1); opacity: 0.55; background: #dc2626; }
+      50%  { transform: translateY(6px) scale(1.15); opacity: 1;   background: #facc15; }
+      100% { transform: translateY(0px) scale(1); opacity: 0.65; background: #fb7185; }
     }
 
-    /* ===== CONTAINER ===== */
+    /* =========================================
+       CONTAINER – giữ nguyên bố cục, chỉ giữ style đẹp
+    ========================================= */
     #container {
       max-width: 1050px;
       margin: 50px auto;
@@ -169,7 +201,6 @@
       box-shadow: 0 5px 18px rgba(255, 87, 34, 0.45);
       transition: .2s;
     }
-
     .btn-check:hover { transform: translateY(-2px); }
 
     #status {
@@ -212,6 +243,7 @@
 
 <body>
 
+  <!-- DÂY ĐÈN -->
   <div class="christmas-lights">
     <span></span><span></span><span></span><span></span><span></span>
     <span></span><span></span><span></span><span></span><span></span>
@@ -219,25 +251,47 @@
     <span></span><span></span><span></span><span></span><span></span>
   </div>
 
-  <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Christmas_tree_icon.png" class="tree-left" />
-  <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Christmas_tree_icon.png" class="tree-right" />
+  <!-- ICON TẾT 2 BÊN (đèn lồng) – giữ nguyên class để không đổi bố cục -->
+  <img
+    src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Red_lantern_icon.svg/512px-Red_lantern_icon.svg.png"
+    class="tree-left"
+    alt="lantern-left"
+  />
+  <img
+    src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Red_lantern_icon.svg/512px-Red_lantern_icon.svg.png"
+    class="tree-right"
+    alt="lantern-right"
+  />
 
+  <!-- LÌ XÌ RƠI SCRIPT -->
   <script>
-    function createSnow() {
-      const snow = document.createElement("div");
-      snow.classList.add("snow");
-      const snowChars = ["✼","✽","✾","✿","❉","❊","✻","✺","✹","✵","✴"];
-      snow.textContent = snowChars[Math.floor(Math.random() * snowChars.length)];
-      snow.style.left = Math.random() * window.innerWidth + "px";
-      snow.style.animationDuration = 2 + Math.random() * 4 + "s";
-      snow.style.opacity = Math.random() * 0.9 + 0.1;
-      snow.style.fontSize = Math.random() * 12 + 10 + "px";
-      document.body.appendChild(snow);
-      setTimeout(() => snow.remove(), 8000);
+    function createLiXi() {
+      const el = document.createElement("div");
+      el.className = "lixi";
+
+      const chars = ["福","禄","寿","TẾT","LỘC","PHÁT","TÀI"];
+      el.style.setProperty("--char", `"${chars[Math.floor(Math.random() * chars.length)]}"`);
+
+      el.style.left = Math.random() * window.innerWidth + "px";
+      el.style.animationDuration = (3 + Math.random() * 5) + "s";
+
+      // xoay + scale
+      const tilt = (Math.random() * 50 - 25).toFixed(2);
+      const scale = (0.8 + Math.random() * 0.65).toFixed(2);
+      el.style.transform = `rotate(${tilt}deg) scale(${scale})`;
+
+      // đậm nhạt nhẹ
+      el.style.opacity = (0.55 + Math.random() * 0.45).toFixed(2);
+
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 10000);
     }
-    setInterval(createSnow, 60);
+
+    // mật độ lì xì: giảm số xuống (vd 120) nếu muốn thưa hơn
+    setInterval(createLiXi, 80);
   </script>
 
+  <!-- MAIN -->
   <div id="container">
     <img src="./logo.png" class="logo-img" alt="logo">
 
@@ -247,7 +301,7 @@
       Mặt Trận Tổ Quốc Việt Nam – Ban Cứu Trợ Trung Ương
     </p>
 
-    <h2>Tra cứu đơn hàng Shopee – Minh Quý 🎄</h2>
+    <h2>Tra cứu đơn hàng Shopee – Minh Quý 🧧</h2>
 
     <textarea id="cookieBox" rows="6" placeholder="Dán cookie SPC_ST=... vào đây"></textarea>
 
@@ -260,6 +314,7 @@
     <div id="result"></div>
   </div>
 
+  <!-- GIỮ NGUYÊN LOGIC CHECK -->
   <script>
     async function go() {
       const cookies = document.getElementById("cookieBox").value
@@ -330,7 +385,6 @@
   </script>
 
   <!-- ===== ADCASH AUTOTAG (CHỈ THÊM, KHÔNG SỬA CODE CŨ) ===== -->
- 
   <script type="text/javascript">
     aclib.runAutoTag({
       zoneId: 'wfbsexymx9'
