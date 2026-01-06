@@ -421,3 +421,109 @@ tr:hover {
   object-fit: cover;
   border: solid 2px rgba(255,255,255,0.3);
 }
+/* =========================================
+   DÂY TREO TẾT – võng xuống + xen kẽ
+========================================= */
+.festoon {
+  position: fixed;
+  top: 0;
+  left: -5%;
+  width: 110%;
+  height: 140px;
+  pointer-events: none;
+  z-index: 99999;
+
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+
+  /* dây võng */
+  border-bottom: 3px solid rgba(250,204,21,0.65);
+  border-radius: 0 0 100% 100%;
+}
+
+/* mô phỏng dây võng xuống */
+.festoon::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 32px;
+  height: 80px;
+  border-bottom: 3px solid rgba(250,204,21,0.55);
+  border-radius: 0 0 100% 100%;
+}
+
+/* ===== ITEM CHUNG ===== */
+.festoon .item {
+  position: relative;
+  margin-top: 55px; /* tạo độ lòng thòng */
+  transform-origin: top center;
+  animation: swing 3.2s ease-in-out infinite;
+}
+
+/* lệch nhịp cho tự nhiên */
+.festoon .item:nth-child(odd) { animation-duration: 3.8s; }
+.festoon .item:nth-child(3n)  { animation-duration: 2.6s; }
+
+/* ===== ĐÈN CHỚP ===== */
+.festoon .light {
+  width: 16px;
+  height: 26px;
+  border-radius: 50%;
+  background: #dc2626;
+  box-shadow: 0 0 12px rgba(255,255,255,0.8);
+  animation:
+    blink 1.4s infinite alternate ease-in-out,
+    swing 3s ease-in-out infinite;
+}
+
+/* ===== LỒNG ĐÈN ===== */
+.festoon .lantern {
+  width: 44px;
+  height: 58px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ef4444, #b91c1c);
+  border: 2px solid rgba(250,204,21,0.9);
+  box-shadow:
+    0 12px 20px rgba(0,0,0,0.25),
+    0 0 18px rgba(250,204,21,0.25);
+}
+
+/* dây treo lồng đèn */
+.festoon .lantern::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  width: 2px;
+  height: 20px;
+  background: rgba(250,204,21,0.9);
+  transform: translateX(-50%);
+}
+
+/* tua rua */
+.festoon .lantern::after {
+  content: "";
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  width: 14px;
+  height: 18px;
+  background: rgba(250,204,21,0.95);
+  border-radius: 0 0 10px 10px;
+  transform: translateX(-50%);
+}
+
+/* ===== ANIMATION ===== */
+@keyframes swing {
+  0%   { transform: rotate(-4deg); }
+  50%  { transform: rotate(4deg); }
+  100% { transform: rotate(-4deg); }
+}
+
+@keyframes blink {
+  0%   { background:#dc2626; opacity:.6; }
+  50%  { background:#facc15; opacity:1; }
+  100% { background:#fb7185; opacity:.7; }
+}
