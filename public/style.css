@@ -127,6 +127,92 @@ body {
   animation: blink 1.4s infinite alternate ease-in-out;
   filter: drop-shadow(0 0 8px rgba(255,255,255,0.9));
 }
+/* =========================================
+   LỒNG ĐÈN TREO (thêm)
+========================================= */
+.lantern-row{
+  position: fixed;
+  top: 68px;            /* nằm dưới dây đèn */
+  left: 0;
+  width: 100%;
+  height: 120px;
+  pointer-events: none;
+  z-index: 99998;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  padding: 0 18px;
+}
+
+/* dây treo */
+.lantern-row::before{
+  content:"";
+  position:absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(250,204,21,0.65);
+  box-shadow: 0 0 14px rgba(250,204,21,0.25);
+}
+
+/* mỗi lồng đèn */
+.lantern{
+  position: relative;
+  width: 44px;
+  height: 58px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ef4444, #b91c1c);
+  border: 2px solid rgba(250,204,21,0.9);
+  box-shadow: 0 12px 20px rgba(0,0,0,0.25), 0 0 18px rgba(250,204,21,0.18);
+  transform-origin: top center;
+  animation: lanternSwing 2.8s ease-in-out infinite;
+  margin-top: 18px;
+}
+
+/* móc treo */
+.lantern::before{
+  content:"";
+  position:absolute;
+  top: -18px;
+  left: 50%;
+  width: 2px;
+  height: 18px;
+  background: rgba(250,204,21,0.85);
+  transform: translateX(-50%);
+}
+
+/* tua rua */
+.lantern::after{
+  content:"";
+  position:absolute;
+  left: 50%;
+  bottom: -16px;
+  width: 14px;
+  height: 16px;
+  background: rgba(250,204,21,0.95);
+  border-radius: 0 0 10px 10px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px rgba(250,204,21,0.25);
+}
+
+/* vạch trang trí ngang */
+.lantern{
+  background:
+    linear-gradient(180deg, #ef4444, #b91c1c);
+}
+.lantern::marker{ content: ""; }
+
+.lantern-row .lantern:nth-child(odd){ animation-duration: 3.2s; }
+.lantern-row .lantern:nth-child(3n){ animation-duration: 2.4s; }
+.lantern-row .lantern:nth-child(4n){ width: 48px; height: 64px; }
+
+@keyframes lanternSwing{
+  0%   { transform: rotate(-4deg); }
+  50%  { transform: rotate(4deg); }
+  100% { transform: rotate(-4deg); }
+}
+
 
 .christmas-lights span:nth-child(odd) { animation-duration: 1s; }
 .christmas-lights span:nth-child(3n) { animation-duration: 1.8s; }
