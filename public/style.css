@@ -7,14 +7,16 @@
 }
 
 /* =========================================
-   BACKGROUND GIÁNG SINH – GRADIENT MỊN
+   BACKGROUND TẾT – GRADIENT + ANIMATION
+   (giữ bố cục, chỉ đổi màu Noel -> Tết)
 ========================================= */
 body {
-  background: linear-gradient(160deg, #8b1e22, #5a1122, #1a1b32);
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(160deg, #b91c1c, #8b1e22, #f59e0b, #1a1b32);
   background-size: 300% 300%;
   animation: bgMove 12s ease infinite;
   color: #f1f5f9;
-  padding: 20px;
   overflow-x: hidden;
 }
 
@@ -25,7 +27,130 @@ body {
 }
 
 /* =========================================
-   CONTAINER – góc bo iOS + shadow mềm
+   LÌ XÌ RƠI – (thay tuyết rơi)
+========================================= */
+.lixi {
+  position: fixed;
+  top: -70px;
+  pointer-events: none;
+  z-index: 9999;
+
+  width: 42px;
+  height: 56px;
+  border-radius: 10px;
+
+  background: linear-gradient(180deg, #dc2626, #991b1b);
+  border: 2px solid rgba(250,204,21,0.95);
+
+  box-shadow:
+    0 10px 22px rgba(0,0,0,0.35),
+    0 0 18px rgba(250,204,21,0.35);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  animation: lixiFall linear forwards;
+}
+
+.lixi::before {
+  content: var(--char, "福");
+  font-weight: 900;
+  font-size: 18px;
+  color: #facc15;
+  text-shadow: 0 0 10px rgba(250,204,21,0.55);
+}
+
+.lixi::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  width: 18px;
+  height: 10px;
+  border-radius: 6px;
+  background: rgba(250,204,21,0.95);
+  box-shadow: 0 0 10px rgba(250,204,21,0.35);
+}
+
+@keyframes lixiFall {
+  to {
+    transform: translateY(120vh) rotate(380deg);
+    opacity: 0;
+  }
+}
+
+/* =========================================
+   “CÂY THÔNG 2 BÊN” -> vẫn dùng class tree-left/right
+   (giữ bố cục, chỉ đổi cảm giác Tết)
+========================================= */
+.tree-left, .tree-right {
+  position: fixed;
+  width: 130px;
+  bottom: 20px;
+  filter: drop-shadow(0 0 20px rgba(250, 204, 21, 0.75));
+  z-index: 9000;
+  animation: pulse 2.4s infinite ease-in-out;
+  opacity: 0.95;
+}
+
+.tree-left { left: 25px; }
+.tree-right { right: 25px; }
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.9; }
+}
+
+/* =========================================
+   DÂY ĐÈN (GIỮ BỐ CỤC, ĐỔI MÀU TẾT)
+========================================= */
+.christmas-lights {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  pointer-events: none;
+  z-index: 99999;
+}
+
+.christmas-lights span {
+  width: 16px;
+  height: 26px;
+  border-radius: 50%;
+  background: #dc2626;
+  margin-top: 10px;
+  animation: blink 1.4s infinite alternate ease-in-out;
+  filter: drop-shadow(0 0 8px rgba(255,255,255,0.9));
+}
+
+.christmas-lights span:nth-child(odd) { animation-duration: 1s; }
+.christmas-lights span:nth-child(3n) { animation-duration: 1.8s; }
+
+@keyframes blink {
+  0% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.55;
+    background: #dc2626;
+  }
+  50% {
+    transform: translateY(6px) scale(1.15);
+    opacity: 1;
+    background: #facc15;
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.65;
+    background: #fb7185;
+  }
+}
+
+/* =========================================
+   CONTAINER – giữ layout đẹp iOS như bạn gửi
 ========================================= */
 #container {
   max-width: 1100px;
@@ -36,7 +161,6 @@ body {
   backdrop-filter: blur(18px);
   border: solid 1px rgba(255,255,255,0.25);
 
-  /* Shadow mềm kiểu iOS */
   box-shadow:
      0 12px 30px rgba(0,0,0,0.25),
      inset 0 0 45px rgba(255,255,255,0.05);
@@ -49,9 +173,7 @@ body {
   100% { opacity: 1; transform: translateY(0); }
 }
 
-/* =========================================
-   LOGO
-========================================= */
+/* LOGO */
 .logo-img {
   width: 120px;
   display: block;
@@ -66,9 +188,7 @@ body {
   to { opacity: 1; }
 }
 
-/* =========================================
-   TIÊU ĐỀ – neon vàng
-========================================= */
+/* TIÊU ĐỀ */
 h2 {
   text-align: center;
   font-size: 38px;
@@ -82,9 +202,7 @@ h2 {
     0 0 30px rgba(255, 185, 0, 0.6);
 }
 
-/* =========================================
-   TEXTAREA
-========================================= */
+/* TEXTAREA */
 textarea {
   width: 100%;
   background: rgba(255,255,255,0.12);
@@ -100,13 +218,11 @@ textarea {
 }
 
 textarea:focus {
-  border-color: #ff914d;
-  box-shadow: 0 0 15px rgba(255,140,60,0.35);
+  border-color: #ffb02e;
+  box-shadow: 0 0 15px rgba(255,176,46,0.35);
 }
 
-/* =========================================
-   NÚT – hover đẹp, glow
-========================================= */
+/* NÚT */
 .btn-row {
   display: flex;
   justify-content: space-between;
@@ -149,23 +265,15 @@ textarea:focus {
   box-shadow: 0 10px 26px rgba(255, 65, 0, 0.7);
 }
 
-/* =========================================
-   LOADING ANIMATION – “Đang lấy đơn…”
-========================================= */
-#status.loading::after {
-  content: "⌛";
-  margin-left: 8px;
-  animation: spin 0.7s linear infinite;
+/* STATUS */
+#status {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-/* =========================================
-   TABLE – đẹp hơn
-========================================= */
+/* TABLE */
 table {
   width: 100%;
   border-collapse: collapse;
