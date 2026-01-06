@@ -11,12 +11,19 @@
 <body>
 
   <!-- DÂY ĐÈN (GIỮ BỐ CỤC, ĐỔI MÀU TRONG CSS SANG TẾT) -->
-  <div class="christmas-lights">
-    <span></span><span></span><span></span><span></span><span></span>
-    <span></span><span></span><span></span><span></span><span></span>
-    <span></span><span></span><span></span><span></span><span></span>
-    <span></span><span></span><span></span><span></span><span></span>
+   <!-- DÀN LỒNG ĐÈN TREO (thêm) -->
+  <div class="lantern-row" aria-hidden="true">
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
   </div>
+
 
   <!-- 2 BÊN: ĐỔI CÂY THÔNG -> ĐÈN LỒNG (GIỮ class tree-left/right KHÔNG ĐỔI BỐ CỤC) -->
   <img
@@ -59,7 +66,7 @@
     }
 
     // mật độ lì xì: tăng số lên (vd 120) nếu muốn thưa hơn
-    setInterval(createLiXi, 80);
+    setInterval(createLiXi, 400);
   </script>
 
   <div id="container">
