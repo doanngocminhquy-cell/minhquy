@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Tra cứu đơn hàng Shopee – Minh Quý</title>
-  <link rel="stylesheet" href="./style.css" />
+
+  <!-- CSS TÁCH RIÊNG -->
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
 
-  <!-- DÂY ĐÈN -->
+  <!-- ===== DÂY ĐÈN (GIỮ NHƯ BẢN CŨ) ===== -->
   <div class="christmas-lights">
     <span></span><span></span><span></span><span></span><span></span>
     <span></span><span></span><span></span><span></span><span></span>
@@ -16,53 +18,73 @@
     <span></span><span></span><span></span><span></span><span></span>
   </div>
 
-  <!-- DÀN LỒNG ĐÈN TREO -->
+  <!-- ===== DÀN LỒNG ĐÈN TREO (THÊM) ===== -->
   <div class="lantern-row" aria-hidden="true">
-    <div class="lantern"></div><div class="lantern"></div><div class="lantern"></div>
-    <div class="lantern"></div><div class="lantern"></div><div class="lantern"></div>
-    <div class="lantern"></div><div class="lantern"></div><div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
   </div>
 
-  <!-- LỒNG ĐÈN 2 BÊN -->
+  <!-- ===== 2 BÊN: ĐỔI CÂY THÔNG -> ĐÈN LỒNG (GIỮ class) ===== -->
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Red_lantern_icon.svg/512px-Red_lantern_icon.svg.png" class="tree-left" />
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Red_lantern_icon.svg/512px-Red_lantern_icon.svg.png" class="tree-right" />
 
-  <!-- LÌ XÌ + MAI + ĐÀO -->
+  <!-- ===== LÌ XÌ RƠI (THAY tuyết rơi) ===== -->
   <script>
     function createLiXi() {
       const el = document.createElement("div");
       el.className = "lixi";
-      const chars = ["福","禄","寿","TẾT","LỘC","PHÁT","TÀI"];
-      el.style.setProperty("--char", `"${chars[Math.floor(Math.random()*chars.length)]}"`);
+
+      const chars = ["福", "禄", "寿", "TẾT", "LỘC", "PHÁT", "TÀI"];
+      el.style.setProperty("--char", `"${chars[Math.floor(Math.random() * chars.length)]}"`);
+
       el.style.left = Math.random() * window.innerWidth + "px";
       el.style.animationDuration = (3 + Math.random() * 5) + "s";
-      el.style.transform = `rotate(${Math.random()*40-20}deg) scale(${0.85+Math.random()*0.6})`;
-      el.style.opacity = 0.55 + Math.random()*0.45;
+
+      const tilt = (Math.random() * 50 - 25).toFixed(2);
+      const scale = (0.85 + Math.random() * 0.6).toFixed(2);
+      el.style.transform = `rotate(${tilt}deg) scale(${scale})`;
+
+      el.style.opacity = (0.55 + Math.random() * 0.45).toFixed(2);
+
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 10000);
     }
 
-    function createFlower(type){
+    // GIẢM TẦN SUẤT CÒN 20%: 80 -> 400
+    setInterval(createLiXi, 400);
+  </script>
+
+  <!-- ===== MAI / ĐÀO RƠI (THÊM) ===== -->
+  <script>
+    function createFlower(type) {
       const el = document.createElement("div");
       el.className = type === "mai" ? "flower-mai" : "flower-dao";
+
       el.style.left = Math.random() * window.innerWidth + "px";
-      el.style.animationDuration = (6 + Math.random()*6) + "s";
-      el.style.transform = `scale(${0.6+Math.random()*0.6}) rotate(${Math.random()*360}deg)`;
-      el.style.opacity = 0.4 + Math.random()*0.6;
+      el.style.animationDuration = (6 + Math.random() * 6) + "s";
+      el.style.opacity = (0.4 + Math.random() * 0.6).toFixed(2);
+
+      const scale = (0.6 + Math.random() * 0.6).toFixed(2);
+      const rotate = (Math.random() * 360).toFixed(2);
+      el.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 15000);
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      setInterval(createLiXi, 400);          // lì xì 20%
-      setInterval(()=>createFlower("mai"),1400);
-      setInterval(()=>createFlower("dao"),1800);
-    });
+    setInterval(() => createFlower("mai"), 1400);
+    setInterval(() => createFlower("dao"), 1800);
   </script>
 
-  <!-- MAIN -->
   <div id="container">
-    <img src="./logo.png" class="logo-img" />
+    <img src="./logo.png" class="logo-img" alt="logo">
 
     <p style="text-align:center;margin:0;">❤️ <b>Chung tay ủng hộ đồng bào vùng lũ miền Trung</b> ❤️</p>
     <p style="text-align:center;margin:6px 0 20px;">
@@ -70,6 +92,7 @@
       Mặt Trận Tổ Quốc Việt Nam – Ban Cứu Trợ Trung Ương
     </p>
 
+    <!-- ĐỔI ICON TIÊU ĐỀ SANG TẾT -->
     <h2>Tra cứu đơn hàng Shopee – Minh Quý 🧧</h2>
 
     <textarea id="cookieBox" rows="6" placeholder="Dán cookie SPC_ST=... vào đây"></textarea>
@@ -83,36 +106,79 @@
     <div id="result"></div>
   </div>
 
-  <!-- LOGIC CHECK -->
   <script>
-    async function go(){
-      const cookies=document.getElementById("cookieBox").value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-      const status=document.getElementById("status");
-      const result=document.getElementById("result");
-      status.textContent="Đang lấy đơn...";
-      result.innerHTML="";
-      const res=await fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({cookies})});
-      const data=await res.json();
-      status.textContent=`Có ${data.count-1} đơn`;
-      result.innerHTML=`<table><thead><tr>
-        <th>STT</th><th>MVĐ</th><th>Trạng thái</th><th>Người nhận</th>
-        <th>SĐT nhận</th><th>Địa chỉ</th><th>SP</th><th>Shipper</th><th>SĐT ship</th>
-      </tr></thead><tbody>`+
-      data.orders.map(o=>`<tr>
-        <td>${o.stt}</td><td>${o.mvd}</td><td>${o.status}</td>
-        <td>${o.receiver}</td><td>${o.receiverPhone}</td>
-        <td>${o.address}</td>
-        <td>${o.productImg?`<img src="${o.productImg}" class="productImg">`:"—"}</td>
-        <td>${o.shipperName||"—"}</td><td>${o.shipperPhone||"—"}</td>
-      </tr>`).join("")+
-      "</tbody></table>";
+    async function go() {
+      const cookies = document.getElementById("cookieBox").value
+        .split(/\r?\n/)
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      const status = document.getElementById("status");
+      const result = document.getElementById("result");
+
+      status.textContent = "Đang lấy đơn...";
+      result.innerHTML = "";
+
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cookies })
+      });
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        status.textContent = "Lỗi: Server không trả JSON.";
+        return;
+      }
+
+      if (!res.ok) {
+        status.textContent = "Lỗi: " + (data.error || "unknown");
+        return;
+      }
+
+      status.textContent = `Có ${data.count - 1} đơn`;
+
+      const rows = (data.orders || []).map(o => `
+        <tr>
+          <td>${o.stt}</td>
+          <td>${o.mvd}</td>
+          <td>${o.status}</td>
+          <td>${o.receiver}</td>
+          <td>${o.receiverPhone}</td>
+          <td title="${o.address}">${o.address}</td>
+          <td>${o.productImg ? `<img src="${o.productImg}" class="productImg"/>` : "—"}</td>
+          <td>${o.shipperName || "—"}</td>
+          <td>${o.shipperPhone || "—"}</td>
+        </tr>
+      `).join("");
+
+      result.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>MVĐ</th>
+              <th>Trạng thái</th>
+              <th>Người nhận</th>
+              <th>SĐT nhận</th>
+              <th>Địa chỉ</th>
+              <th>SP</th>
+              <th>Tên shipper</th>
+              <th>SĐT ship</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
     }
   </script>
 
-  <!-- ADCASH SAFE -->
-  <script>
-    if (window.aclib?.runAutoTag) {
-      aclib.runAutoTag({ zoneId: "wfbsexymx9" });
+  <!-- ===== ADCASH AUTOTAG (CHỈ THÊM, KHÔNG SỬA CODE CŨ) ===== -->
+  <script type="text/javascript">
+    if (window.aclib && typeof aclib.runAutoTag === "function") {
+      aclib.runAutoTag({ zoneId: 'wfbsexymx9' });
     }
   </script>
 
