@@ -396,3 +396,66 @@ tr:hover {
   object-fit: cover;
   border: solid 2px rgba(255,255,255,0.3);
 }
+/* =========================================
+   HOA MAI & HOA ĐÀO RƠI (TẾT VN)
+========================================= */
+.flower-mai,
+.flower-dao {
+  position: fixed;
+  top: -40px;
+  pointer-events: none;
+  z-index: 7000;
+  animation: flowerFall linear forwards;
+}
+
+/* HOA MAI – VÀNG */
+.flower-mai {
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle at center, #fde047, #facc15);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(250,204,21,0.55);
+}
+
+/* 5 cánh mai */
+.flower-mai::before,
+.flower-mai::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: inherit;
+  border-radius: 50%;
+}
+.flower-mai::before { transform: rotate(60deg); }
+.flower-mai::after  { transform: rotate(-60deg); }
+
+/* HOA ĐÀO – HỒNG */
+.flower-dao {
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle at center, #fda4af, #fb7185);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(251,113,133,0.5);
+}
+
+/* cánh đào */
+.flower-dao::before,
+.flower-dao::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: inherit;
+  border-radius: 50%;
+}
+.flower-dao::before { transform: rotate(45deg); }
+.flower-dao::after  { transform: rotate(-45deg); }
+
+/* rơi nhẹ + lắc */
+@keyframes flowerFall {
+  to {
+    transform: translateY(120vh) rotate(360deg);
+    opacity: 0;
+  }
+}
