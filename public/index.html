@@ -147,38 +147,39 @@
 
       status.textContent = `Có ${data.count - 1} đơn`;
 
-      const rows = (data.orders || []).map(o => `
-        <tr>
-          <td>${o.stt}</td>
-          <td>${o.mvd}</td>
-          <td>${o.status}</td>
-          <td>${o.receiver}</td>
-          <td>${o.receiverPhone}</td>
-          <td title="${o.address}">${o.address}</td>
-          <td>${o.productImg ? `<img src="${o.productImg}" class="productImg"/>` : "—"}</td>
-          <td>${o.shipperName || "—"}</td>
-          <td>${o.shipperPhone || "—"}</td>
-        </tr>
-      `).join("");
+     const rows = (data.orders || []).map(o => `
+  <tr>
+    <td>${o.stt}</td>
+    <td>${o.productImg ? `<img src="${o.productImg}" class="productImg"/>` : "—"}</td>
+    <td>${o.cod ?? "—"}</td>
+    <td>${o.mvd}</td>
+    <td>${o.status}</td>
+    <td>${o.receiver}</td>
+    <td>${o.receiverPhone}</td>
+    <td title="${o.address}">${o.address}</td>
+    <td>${o.shipperPhone || "—"}</td>
+  </tr>
+`).join("");
 
-      result.innerHTML = `
-        <table>
-          <thead>
-            <tr>
-              <th>STT</th>
-              <th>MVĐ</th>
-              <th>Trạng thái</th>
-              <th>Người nhận</th>
-              <th>SĐT nhận</th>
-              <th>Địa chỉ</th>
-              <th>SP</th>
-              <th>Tên shipper</th>
-              <th>SĐT ship</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      `;
+result.innerHTML = `
+  <table>
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Ảnh</th>
+        <th>COD</th>
+        <th>Mã vận đơn</th>
+        <th>Trạng thái</th>
+        <th>Người nhận</th>
+        <th>SĐT</th>
+        <th>Địa chỉ</th>
+        <th>SĐT ship</th>
+      </tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>
+`;
+
     }
   </script>
 
