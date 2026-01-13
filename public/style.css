@@ -487,3 +487,47 @@ tr:hover {
 .festoon .item{
   z-index: 1;
 }
+/* =========================
+   FESTOON: kéo lồng đèn xuống + chữ "CHÚC MỪNG NĂM MỚI"
+   (không cần sửa HTML)
+========================= */
+
+/* kéo toàn bộ item xuống chút để khớp dây (nếu cần) */
+.festoon .item{
+  position: relative;
+}
+
+/* NHÍCH LỒNG ĐÈN XUỐNG CHO BẰNG SỢI DÂY */
+.festoon .item.lantern{
+  top: 22px;            /* tăng/giảm 18-28px tuỳ bạn thấy vừa */
+}
+
+/* Thêm chữ lên mặt lồng đèn */
+.festoon .item.lantern::before{
+  content: var(--lantern-text, "");
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: #facc15;
+  text-shadow: 0 0 10px rgba(250,204,21,0.55);
+  pointer-events: none;
+}
+
+/* 4 lồng đèn nằm ở các child: 2,4,6,8 (do xen kẽ light/lantern) */
+.festoon .item.lantern:nth-child(2){ --lantern-text: "CHÚC"; }
+.festoon .item.lantern:nth-child(4){ --lantern-text: "MỪNG"; }
+.festoon .item.lantern:nth-child(6){ --lantern-text: "NĂM"; }
+.festoon .item.lantern:nth-child(8){ --lantern-text: "MỚI"; }
+
+/* Nếu chữ bị dính viền/khó đọc, thêm nền mờ nhẹ */
+.festoon .item.lantern::before{
+  background: radial-gradient(circle at center, rgba(0,0,0,0.18), transparent 65%);
+  border-radius: 14px;
+}
+
