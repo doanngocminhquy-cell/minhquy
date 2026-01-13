@@ -24,6 +24,8 @@ const WORKER_URL = "https://1.doanngocminhquy.workers.dev";
 
 // ===== Excel path =====
 const EXCEL_PATH = path.join(__dirname, "data", "orders.xlsx");
+const dataDir = path.join(__dirname, "data");
+if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
 // ===== cache =====
 let EXCEL_CACHE = null;
@@ -56,7 +58,7 @@ app.post("/api/orders", async (req, res) => {
       {
         headers: { "Content-Type": "application/json" },
         timeout: 20000,
-        responseType: "arraybuffer"
+        responseType: "arraybuffer",
       }
     );
 
@@ -82,34 +84,51 @@ app.post("/api/orders", async (req, res) => {
       });
     });
 
-    res.json({ count: orders.length, orders });
+    return res.json({ count: orders.length, orders });
   } catch (e) {
-    res.status(500).json({ error: "Worker lỗi", detail: e.message });
+    return res.status(500).json({ error: "Worker lỗi", detail: e.message });
   }
 });
 
 // =================================================
-// 2️⃣ EXCEL LOAD
+// 2️⃣ EXCEL LOAD (CHỐNG ENOENT + CHỐNG SHEET RỖNG)
 // =================================================
 function loadExcel() {
+  // Render free restart là mất file -> phải check
+  if (!fs.existsSync(EXCEL_PATH)) {
+    throw new Error("Chưa có file Excel trên server. Admin cần upload lại.");
+  }
+
   const stat = fs.statSync(EXCEL_PATH);
   if (EXCEL_CACHE && EXCEL_MTIME === stat.mtimeMs) return EXCEL_CACHE;
 
   const buf = fs.readFileSync(EXCEL_PATH);
   const wb = XLSX.read(buf, { type: "buffer" });
-  const ws = wb.Sheets[wb.SheetNames[0]];
-  const range = XLSX.utils.decode_range(ws["!ref"]);
 
+  const sheetName = wb.SheetNames?.[0];
+  if (!sheetName) throw new Error("Excel không có sheet nào.");
+
+  const ws = wb.Sheets[sheetName];
+  if (!ws) throw new Error("Không đọc được sheet: " + sheetName);
+
+  if (!ws["!ref"]) {
+    EXCEL_CACHE = [];
+    EXCEL_MTIME = stat.mtimeMs;
+    return EXCEL_CACHE;
+  }
+
+  const range = XLSX.utils.decode_range(ws["!ref"]);
   const rows = [];
 
+  // đọc đúng theo cột A-G
   for (let r = range.s.r + 1; r <= range.e.r; r++) {
     const code = String(ws["A" + (r + 1)]?.v || "").trim().toUpperCase();
     const name = String(ws["B" + (r + 1)]?.v || "").trim();
     const address = String(ws["C" + (r + 1)]?.v || "").trim();
     const product = String(ws["D" + (r + 1)]?.v || "").trim();
     const cod = String(ws["E" + (r + 1)]?.v || "").trim();
-    const mvd = String(ws["F" + (r + 1)]?.v || "").trim();
-    const shopee = String(ws["G" + (r + 1)]?.v || "").trim();
+    const mvd = String(ws["F" + (r + 1)]?.v || "").trim().toUpperCase();
+    const shopee = String(ws["G" + (r + 1)]?.v || "").trim().toUpperCase();
 
     if (!code && !mvd && !shopee) continue;
 
@@ -130,13 +149,16 @@ app.get("/api/track", (req, res) => {
 
   try {
     const list = loadExcel();
-    const found = list.find(x => x.code === q || x.mvd === q || x.shopee === q);
+    const found = list.find(
+      (x) => x.code === q || x.mvd === q || x.shopee === q
+    );
 
-    if (!found) return res.status(404).json({ error: "Không tìm thấy" });
+    if (!found) return res.status(404).json({ error: "Không tìm thấy trong Excel" });
 
-    res.json({ order: found });
+    return res.json({ order: found });
   } catch (e) {
-    res.status(500).json({ error: "Excel lỗi", detail: e.message });
+    // Trả lỗi rõ để bạn biết thiếu upload hay lỗi thật
+    return res.status(500).json({ error: "Excel lỗi", detail: e.message });
   }
 });
 
@@ -146,24 +168,28 @@ app.get("/api/track", (req, res) => {
 const upload = multer({ storage: multer.memoryStorage() });
 
 app.post("/api/upload-excel", upload.single("file"), (req, res) => {
-  if (req.headers["x-admin-token"] !== process.env.ADMIN_TOKEN) {
-    return res.status(401).json({ error: "Unauthorized" });
+  try {
+    if (req.headers["x-admin-token"] !== process.env.ADMIN_TOKEN) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    if (!req.file) return res.status(400).json({ error: "No file" });
+
+    const dir = path.join(__dirname, "data");
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+    fs.writeFileSync(EXCEL_PATH, req.file.buffer);
+
+    EXCEL_CACHE = null;
+    EXCEL_MTIME = 0;
+
+    return res.json({ ok: true, message: "Đã cập nhật Excel" });
+  } catch (e) {
+    return res.status(500).json({ error: "Upload lỗi", detail: e.message });
   }
-
-  if (!req.file) return res.status(400).json({ error: "No file" });
-
-  const dir = path.join(__dirname, "data");
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-
-  fs.writeFileSync(EXCEL_PATH, req.file.buffer);
-
-  EXCEL_CACHE = null;
-  EXCEL_MTIME = 0;
-
-  res.json({ ok: true });
 });
 
 // =================================================
 app.listen(3000, () => {
   console.log("Server running at http://localhost:3000");
+  console.log("Excel path:", EXCEL_PATH);
 });
