@@ -66,17 +66,36 @@ app.post("/api/orders", async (req, res) => {
       if (tds.length === 0) return;
 
       orders.push({
-        stt: $(tds[0]).text().trim(),
-        mvd: $(tds[1]).text().trim(),
-        status: $(tds[2]).text().trim(),
-        receiver: $(tds[3]).text().trim(),
-        receiverPhone: $(tds[4]).text().trim(),
-        address:
-          $(tds[5]).attr("title")?.trim() || $(tds[5]).text().trim(),
-        productImg: $(tds[6]).find("img.product").attr("src") || null,
-        shipperName: $(tds[7]).text().trim(),
-        shipperPhone: $(tds[8]).text().trim()
-      });
+  stt: $(tds[0]).text().trim(),
+
+  // Ảnh
+  productImg:
+    $(tds[1]).find("img").attr("src") ||
+    $(tds[1]).find("img").attr("data-src") ||
+    null,
+
+  // COD
+  cod: $(tds[2]).text().trim(),
+
+  // Mã vận đơn
+  mvd: $(tds[3]).text().trim(),
+
+  // Trạng thái
+  status: $(tds[4]).text().trim(),
+
+  // Người nhận
+  receiver: $(tds[5]).text().trim(),
+
+  // SĐT người nhận
+  receiverPhone: $(tds[6]).text().trim(),
+
+  // Địa chỉ
+  address: $(tds[7]).attr("title")?.trim() || $(tds[7]).text().trim(),
+
+  // SĐT ship
+  shipperPhone: $(tds[8]).text().trim()
+});
+
     });
 
     return res.json({ count: orders.length, orders });
