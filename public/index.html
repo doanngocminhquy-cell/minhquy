@@ -3,46 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <title>Tra cứu đơn hàng Shopee – Minh Quý</title>
-
-  <!-- CSS TÁCH RIÊNG -->
   <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
 
-  <!-- ===== DÂY ĐÈN (GIỮ NHƯ BẢN CŨ) ===== -->
-  <!-- ===== DÂY TREO TẾT: ĐÈN CHỚP + LỒNG ĐÈN XEN KẼ ===== -->
-<div class="festoon" aria-hidden="true">
-  <!-- DÂY LƯỢN SÓNG LIỀN MẠCH -->
-  <svg class="festoon-wire" viewBox="0 0 1200 80" preserveAspectRatio="none">
-    <path class="festoon-path"
-      d="M0,40
-         C100,10 200,70 300,40
-         C400,10 500,70 600,40
-         C700,10 800,70 900,40
-         C1000,10 1100,70 1200,40" />
-  </svg>
+  <div class="festoon" aria-hidden="true">
+    <svg class="festoon-wire" viewBox="0 0 1200 80" preserveAspectRatio="none">
+      <path class="festoon-path"
+        d="M0,40
+           C100,10 200,70 300,40
+           C400,10 500,70 600,40
+           C700,10 800,70 900,40
+           C1000,10 1100,70 1200,40" />
+    </svg>
 
-  <!-- items giữ nguyên -->
-  <div class="item light"></div>
-  <div class="item lantern"></div>
-  <div class="item light"></div>
-  <div class="item lantern"></div>
-  <div class="item light"></div>
-  <div class="item lantern"></div>
-  <div class="item light"></div>
-  <div class="item lantern"></div>
-  <div class="item light"></div>
-</div>
+    <div class="item light"></div>
+    <div class="item lantern"></div>
+    <div class="item light"></div>
+    <div class="item lantern"></div>
+    <div class="item light"></div>
+    <div class="item lantern"></div>
+    <div class="item light"></div>
+    <div class="item lantern"></div>
+    <div class="item light"></div>
+  </div>
 
-  
-
-
-  <!-- ===== 2 BÊN: ĐỔI CÂY THÔNG -> ĐÈN LỒNG (GIỮ class) ===== -->
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Red_lantern_icon.svg/512px-Red_lantern_icon.svg.png" class="tree-left" />
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Red_lantern_icon.svg/512px-Red_lantern_icon.svg.png" class="tree-right" />
 
-  <!-- ===== LÌ XÌ RƠI (THAY tuyết rơi) ===== -->
   <script>
     function createLiXi() {
       const el = document.createElement("div");
@@ -63,12 +52,9 @@
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 10000);
     }
-
-    // GIẢM TẦN SUẤT CÒN 20%: 80 -> 400
     setInterval(createLiXi, 400);
   </script>
 
-  <!-- ===== MAI / ĐÀO RƠI (THÊM) ===== -->
   <script>
     function createFlower(type) {
       const el = document.createElement("div");
@@ -85,7 +71,6 @@
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 15000);
     }
-
     setInterval(() => createFlower("mai"), 1400);
     setInterval(() => createFlower("dao"), 1800);
   </script>
@@ -99,10 +84,20 @@
       Mặt Trận Tổ Quốc Việt Nam – Ban Cứu Trợ Trung Ương
     </p>
 
-    <!-- ĐỔI ICON TIÊU ĐỀ SANG TẾT -->
     <h2>Tra cứu đơn hàng Shopee – Minh Quý 🧧</h2>
 
-    <textarea id="cookieBox" rows="6" placeholder="Nhập mã đơn - Cookie - Mã vận đơn ... vào đây"></textarea>
+    <input id="codeInput" placeholder="Nhập mã đơn (VD: EN4255... hoặc mã đơn Shopee)"
+      style="width:100%;padding:14px;border-radius:14px;border:2px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.12);color:#fff;outline:none;" />
+    <div style="height:10px"></div>
+
+    <button onclick="trackExcel()" class="btn-check" style="width:100%;">Tra mã đơn</button>
+
+    <div id="trackStatus" style="margin-top:14px;text-align:center;font-weight:700;"></div>
+    <div id="trackResult"></div>
+
+    <div style="height:16px"></div>
+
+    <textarea id="cookieBox" rows="6" placeholder="Dán cookie SPC_ST=... vào đây"></textarea>
 
     <div class="btn-row">
       <a href="https://zalo.me/g/rsasqo212" class="btn-zalo">Nhóm ZALO Đặt Đơn</a>
@@ -133,57 +128,114 @@
       });
 
       let data;
-      try {
-        data = await res.json();
-      } catch {
-        status.textContent = "Lỗi: Server không trả JSON.";
-        return;
-      }
+      try { data = await res.json(); }
+      catch { status.textContent = "Lỗi: Server không trả JSON."; return; }
 
       if (!res.ok) {
         status.textContent = "Lỗi: " + (data.error || "unknown");
         return;
       }
 
-      status.textContent = `Có ${data.count - 1} đơn`;
+      status.textContent = `Có ${data.count} đơn`;
 
-     const rows = (data.orders || []).map(o => `
-  <tr>
-    <td>${o.stt}</td>
-    <td>${o.productImg ? `<img src="${o.productImg}" class="productImg"/>` : "—"}</td>
-    <td>${o.cod ?? "—"}</td>
-    <td>${o.mvd}</td>
-    <td>${o.status}</td>
-    <td>${o.receiver}</td>
-    <td>${o.receiverPhone}</td>
-    <td title="${o.address}">${o.address}</td>
-    <td>${o.shipperPhone || "—"}</td>
-  </tr>
-`).join("");
+      const rows = (data.orders || []).map(o => `
+        <tr>
+          <td>${o.stt || "—"}</td>
+          <td>${o.productImg ? `<img src="${o.productImg}" class="productImg"/>` : "—"}</td>
+          <td>${o.cod ?? "—"}</td>
+          <td>${o.mvd || "—"}</td>
+          <td>${o.status || "—"}</td>
+          <td>${o.receiver || "—"}</td>
+          <td>${o.receiverPhone || "—"}</td>
+          <td title="${o.address || ""}">${o.address || "—"}</td>
+          <td>${o.shipperPhone || "—"}</td>
+        </tr>
+      `).join("");
 
-result.innerHTML = `
-  <table>
-    <thead>
-      <tr>
-        <th>STT</th>
-        <th>Ảnh</th>
-        <th>COD</th>
-        <th>Mã vận đơn</th>
-        <th>Trạng thái</th>
-        <th>Người nhận</th>
-        <th>SĐT</th>
-        <th>Địa chỉ</th>
-        <th>SĐT ship</th>
-      </tr>
-    </thead>
-    <tbody>${rows}</tbody>
-  </table>
-`;
+      result.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Ảnh</th>
+              <th>COD</th>
+              <th>Mã vận đơn</th>
+              <th>Trạng thái</th>
+              <th>Người nhận</th>
+              <th>SĐT</th>
+              <th>Địa chỉ</th>
+              <th>SĐT ship</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
 
+    async function trackExcel() {
+      const code = document.getElementById("codeInput").value.trim().toUpperCase();
+      const st = document.getElementById("trackStatus");
+      const rs = document.getElementById("trackResult");
+
+      // dọn kết quả cookie để đỡ rối
+      document.getElementById("status").textContent = "";
+      document.getElementById("result").innerHTML = "";
+
+      if (!code) {
+        st.textContent = "Bạn chưa nhập mã.";
+        rs.innerHTML = "";
+        return;
+      }
+
+      st.textContent = "Đang tra...";
+      rs.innerHTML = "";
+
+      let res, data;
+      try {
+        res = await fetch(`/api/track?code=${encodeURIComponent(code)}`);
+        data = await res.json();
+      } catch {
+        st.textContent = "Lỗi: Không gọi được API.";
+        return;
+      }
+
+      if (!res.ok) {
+        st.textContent = "Lỗi: " + (data.error || "unknown");
+        return;
+      }
+
+      st.textContent = "Tìm thấy!";
+      const o = data.order || {};
+
+      rs.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Mã đơn</th>
+              <th>Tên</th>
+              <th>Địa chỉ</th>
+              <th>Sản phẩm</th>
+              <th>COD</th>
+              <th>Mã vận đơn</th>
+              <th>Mã đơn Shopee</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>${code}</td>
+              <td>${o.name || "—"}</td>
+              <td title="${o.address || ""}">${o.address || "—"}</td>
+              <td>${o.product || "—"}</td>
+              <td>${o.cod || "—"}</td>
+              <td>${o.mvd || "—"}</td>
+              <td>${o.shopeeOrder || "—"}</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
     }
   </script>
 
-  <!-- ===== ADCASH AUTOTAG (CHỈ THÊM, KHÔNG SỬA CODE CŨ) ===== -->
   <script type="text/javascript">
     if (window.aclib && typeof aclib.runAutoTag === "function") {
       aclib.runAutoTag({ zoneId: 'wfbsexymx9' });
