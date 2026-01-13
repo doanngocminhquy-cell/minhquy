@@ -172,81 +172,69 @@
       `;
     }
 
-    <script>
-  function escapeHtml(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
+    async function trackExcel() {
+      const code = document.getElementById("codeInput").value.trim().toUpperCase();
+      const st = document.getElementById("trackStatus");
+      const rs = document.getElementById("trackResult");
 
-  async function trackExcel() {
-    const code = document.getElementById("codeInput").value.trim().toUpperCase();
-    const st = document.getElementById("trackStatus");
-    const rs = document.getElementById("trackResult");
+      // dọn kết quả cookie để đỡ rối
+      document.getElementById("status").textContent = "";
+      document.getElementById("result").innerHTML = "";
 
-    // dọn kết quả cookie để đỡ rối
-    document.getElementById("status").textContent = "";
-    document.getElementById("result").innerHTML = "";
+      if (!code) {
+        st.textContent = "Bạn chưa nhập mã.";
+        rs.innerHTML = "";
+        return;
+      }
 
-    if (!code) {
-      st.textContent = "Bạn chưa nhập mã.";
+      st.textContent = "Đang tra...";
       rs.innerHTML = "";
-      return;
+
+      let res, data;
+      try {
+        res = await fetch(`/api/track?code=${encodeURIComponent(code)}`);
+        data = await res.json();
+      } catch {
+        st.textContent = "Lỗi: Không gọi được API.";
+        return;
+      }
+
+      if (!res.ok) {
+        st.textContent = "Lỗi: " + (data.error || "unknown");
+        return;
+      }
+
+      st.textContent = "Tìm thấy!";
+      const o = data.order || {};
+
+      rs.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Mã đơn</th>
+              <th>Tên</th>
+              <th>Địa chỉ</th>
+              <th>Sản phẩm</th>
+              <th>COD</th>
+              <th>Mã vận đơn</th>
+              <th>Mã đơn Shopee</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>${code}</td>
+              <td>${o.name || "—"}</td>
+              <td title="${o.address || ""}">${o.address || "—"}</td>
+              <td>${o.product || "—"}</td>
+              <td>${o.cod || "—"}</td>
+              <td>${o.mvd || "—"}</td>
+              <td>${o.shopeeOrder || "—"}</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
     }
-
-    st.textContent = "Đang tra...";
-    rs.innerHTML = "";
-
-    let res, data;
-    try {
-      res = await fetch(`/api/track?code=${encodeURIComponent(code)}`);
-      data = await res.json();
-    } catch {
-      st.textContent = "Lỗi: Không gọi được API.";
-      return;
-    }
-
-    if (!res.ok) {
-      st.textContent = "Lỗi: " + (data.error || "unknown");
-      return;
-    }
-
-    st.textContent = "Tìm thấy!";
-    const o = data.order || {};
-
-    // ✅ FIX KEY: server trả { code, name, address, product, cod, mvd, shopee }
-    rs.innerHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Mã đơn</th>
-            <th>Tên</th>
-            <th>Địa chỉ</th>
-            <th>Sản phẩm</th>
-            <th>COD</th>
-            <th>Mã vận đơn</th>
-            <th>Mã đơn Shopee</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>${escapeHtml(o.code || "—")}</td>
-            <td>${escapeHtml(o.name || "—")}</td>
-            <td title="${escapeHtml(o.address || "")}">${escapeHtml(o.address || "—")}</td>
-            <td>${escapeHtml(o.product || "—")}</td>
-            <td>${escapeHtml(o.cod || "—")}</td>
-            <td>${escapeHtml(o.mvd || "—")}</td>
-            <td>${escapeHtml(o.shopee || "—")}</td>
-          </tr>
-        </tbody>
-      </table>
-    `;
-  }
-</script>
-
+  </script>
 
   <script type="text/javascript">
     if (window.aclib && typeof aclib.runAutoTag === "function") {
