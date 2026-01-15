@@ -13,25 +13,41 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: "2mb" }));
 
-// ===== Paths =====
+// =====================
+// Paths / Static
+// =====================
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// serve static
 app.use(express.static(path.join(__dirname, "public")));
 
-// ===== Worker URL (KHÔNG CÓ / CUỐI) =====
+// =====================
+// ENV
+// =====================
 const WORKER_URL = (process.env.WORKER_URL || "https://1.doanngocminhquy.workers.dev").replace(/\/+$/, "");
-
-// ===== Excel Path =====
+const FREESHIP_KEY = process.env.FREESHIP_KEY || "quy892006";
 const EXCEL_PATH = path.join(__dirname, "data", "orders.xlsx");
+
+// =====================
+// Excel cache
+// =====================
 let EXCEL_CACHE = null;
 let EXCEL_MTIME = 0;
 
-// ===== Freeship Key =====
-const FREESHIP_KEY = process.env.FREESHIP_KEY || "quy892006";
+// =====================
+// Autopee headers (quan trọng khi deploy Render)
+/// =====================
+const AUTOPEE_HEADERS = {
+  "Accept": "application/json, text/plain, */*",
+  "Content-Type": "application/json",
+  "Origin": "https://www.autopee.com",
+  "Referer": "https://www.autopee.com/products/shopee/vouchers",
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+};
 
-// ===== Helpers =====
+// =====================
+// Helpers
+// =====================
 function sanitize(s) {
   return String(s || "")
     .replace(/[\u200B-\u200D\uFEFF]/g, "")
@@ -44,8 +60,9 @@ function containsOutOfStockMessage(msg) {
   return (
     t.includes("hết lượt") ||
     t.includes("hết số lượng") ||
+    t.includes("đã hết lượt") ||
     t.includes("fully claimed") ||
-    t.includes("đã hết") && t.includes("lượt")
+    t.includes("out of") && t.includes("stock")
   );
 }
 
@@ -54,7 +71,7 @@ function parseSaveResult(code, httpStatus, body) {
   const err = body?.data?.error;
   const msg = body?.data?.error_msg || body?.message || "";
 
-  // ✅ Ưu tiên nhận diện "hết lượt"
+  // ưu tiên nhận diện "hết lượt"
   if (containsOutOfStockMessage(msg)) {
     return {
       code,
@@ -70,80 +87,77 @@ function parseSaveResult(code, httpStatus, body) {
   const state =
     err === 0 ? "saved" :
     err === 5 ? "already_saved" :
-    // nếu server trả success nhưng không match err => đừng hiện OK nữa
+    // nếu 2xx nhưng không có err rõ ràng -> coi như hết lượt theo yêu cầu bạn
     (httpStatus >= 200 && httpStatus < 300 && success) ? "unknown_but_ok" :
     "failed";
 
   const pretty =
     state === "saved" ? "✅ Đã lưu" :
     state === "already_saved" ? "✅ Bạn đã lưu trước đó" :
-    state === "unknown_but_ok" ? "⚠️ Mã đã hết lượt sử dụng" : // ✅ theo yêu cầu bạn
+    state === "unknown_but_ok" ? "⚠️ Mã đã hết lượt sử dụng" :
     `❌ Lỗi: ${msg || "Không rõ"}`;
 
   return { code, httpStatus, success, error: err ?? null, message: msg || null, state, pretty };
 }
 
-async function autopeeList(url) {
-  const r = await axios.get(url, {
-   headers: {
-  "Accept": "application/json, text/plain, */*",
-  "Content-Type": "application/json",
-  "Origin": "https://www.autopee.com",
-  "Referer": "https://www.autopee.com/products/shopee/vouchers",
-  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
-}
-
+async function autopeeList(listUrl) {
+  const r = await axios.get(listUrl, {
+    headers: AUTOPEE_HEADERS,
     timeout: 20000,
     validateStatus: () => true,
   });
 
   if (r.status < 200 || r.status >= 300) {
-    return { ok: false, status: r.status, data: r.data };
+    return { ok: false, status: r.status, data: r.data, message: "HTTP error" };
   }
 
-  const list = r.data?.data || [];
-  if (!Array.isArray(list)) {
-    return { ok: false, status: 502, data: r.data, message: "List format sai" };
+  // Autopee format: { success: true, data: [...] }
+  if (r.data?.success !== true || !Array.isArray(r.data?.data)) {
+    return { ok: false, status: 502, data: r.data, message: "Autopee format invalid" };
   }
 
-  // trả gọn để render
-  const out = list.map((x) => ({
+  const out = r.data.data.map((x) => ({
     voucherCode: x.voucherCode,
+    voucherName: x.voucherName || x.voucherCode,
     promotionId: x.promotionId,
     signature: x.signature,
     description: x.description || "",
-    endTime: x.endTime || 0,
     startTime: x.startTime || 0,
+    endTime: x.endTime || 0,
     iconText: x.iconText || "",
     voucherMarketType: x.voucherMarketType ?? null,
     hasExpired: !!x.hasExpired,
     fullyClaimed: !!x.fullyClaimed,
     disabled: !!x.disabled,
+    discountValue: x.discountValue ?? 0,
+    discountCap: x.discountCap ?? 0,
+    discountPercentage: x.discountPercentage ?? 0,
+    minSpend: x.minSpend ?? 0,
   }));
 
   return { ok: true, out };
 }
 
 async function autopeeSave({ cookie, code, listUrl }) {
+  // 1) lấy list (để lấy promotionId + signature)
   const listResp = await axios.get(listUrl, {
-    headers: {
-      "Accept": "application/json, text/plain, */*",
-      "Origin": "https://www.autopee.com",
-      "Referer": "https://www.autopee.com/products/shopee/vouchers",
-      "User-Agent": "Mozilla/5.0",
-    },
+    headers: AUTOPEE_HEADERS,
     timeout: 20000,
     validateStatus: () => true,
   });
 
   if (listResp.status < 200 || listResp.status >= 300) {
-    return { ok: false, step: "list", status: listResp.status };
+    return { ok: false, step: "list", status: listResp.status, message: "List HTTP error" };
+  }
+  if (listResp.data?.success !== true || !Array.isArray(listResp.data?.data)) {
+    return { ok: false, step: "list", status: 502, message: "List format invalid", data: listResp.data };
   }
 
-  const list = listResp.data?.data || [];
-  const v = Array.isArray(list) ? list.find((x) => String(x.voucherCode || "").trim() === code) : null;
+  const list = listResp.data.data;
+  const v = list.find((x) => String(x.voucherCode || "").trim() === String(code || "").trim());
   if (!v) return { ok: false, status: 404, message: "Không tìm thấy voucher trong list", code };
 
+  // 2) gọi save
   const payload = {
     cookie,
     voucher_code: v.voucherCode,
@@ -152,13 +166,7 @@ async function autopeeSave({ cookie, code, listUrl }) {
   };
 
   const r = await axios.post("https://api.autopee.com/shopee/save-voucher", payload, {
-    headers: {
-      "Accept": "application/json, text/plain, */*",
-      "Content-Type": "application/json",
-      "Origin": "https://www.autopee.com",
-      "Referer": "https://www.autopee.com/products/shopee/vouchers",
-      "User-Agent": "Mozilla/5.0",
-    },
+    headers: AUTOPEE_HEADERS,
     timeout: 20000,
     validateStatus: () => true,
   });
@@ -174,7 +182,6 @@ app.post("/api/orders", async (req, res) => {
     let { cookies } = req.body || {};
     if (!Array.isArray(cookies)) cookies = [cookies];
     cookies = cookies.map(sanitize).filter(Boolean);
-
     if (!cookies.length) return res.status(400).json({ error: "Chưa có cookie" });
 
     const r = await axios.post(
@@ -265,7 +272,6 @@ function loadExcel() {
     const inputOrder = String(A?.v ?? "").trim().toUpperCase();
     const mvd = String(F?.v ?? "").trim().toUpperCase();
     const shopeeOrder = String(G?.v ?? "").trim().toUpperCase();
-
     if (!inputOrder && !mvd && !shopeeOrder) continue;
 
     rows.push({
@@ -290,10 +296,7 @@ app.get("/api/track", (req, res) => {
 
   try {
     const list = loadExcel();
-    const found = list.find(
-      (x) => x.inputOrder === code || x.mvd === code || x.shopeeOrder === code
-    );
-
+    const found = list.find((x) => x.inputOrder === code || x.mvd === code || x.shopeeOrder === code);
     if (!found) return res.status(404).json({ error: "Không tìm thấy trong Excel" });
     return res.json({ order: found });
   } catch (e) {
@@ -302,7 +305,7 @@ app.get("/api/track", (req, res) => {
 });
 
 // ======================================================
-// 3) Upload Excel
+// 3) Upload Excel (admin)
 // ======================================================
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -334,18 +337,11 @@ app.post("/api/upload-excel", requireAdmin, upload.single("file"), (req, res) =>
 });
 
 // ======================================================
-// 4) AUTOPEE: Discount vouchers
+// 4) AUTOPEE: LIST vouchers (không cần cookie)
 // ======================================================
 app.post("/api/vouchers", async (req, res) => {
   try {
-    let { cookies, limit } = req.body || {};
-    if (!Array.isArray(cookies)) cookies = [cookies];
-    cookies = cookies.map(sanitize).filter(Boolean);
-
-    const cookie = cookies.join("\n").trim();
-    if (!cookie) return res.status(400).json({ ok: false, message: "Thiếu cookie" });
-
-    const lim = Number(limit || 200);
+    const lim = Number(req.body?.limit || 200);
     const url = `https://api.autopee.com/shopee/vouchers?limit=${lim}`;
 
     const out = await autopeeList(url);
@@ -357,6 +353,7 @@ app.post("/api/vouchers", async (req, res) => {
   }
 });
 
+// Save discount voucher (cần cookie)
 app.post("/api/save-voucher", async (req, res) => {
   try {
     let { cookies, code } = req.body || {};
@@ -365,7 +362,6 @@ app.post("/api/save-voucher", async (req, res) => {
 
     if (!Array.isArray(cookies)) cookies = [cookies];
     cookies = cookies.map(sanitize).filter(Boolean);
-
     const cookie = cookies.join("\n").trim();
     if (!cookie) return res.status(400).json({ ok: false, message: "Thiếu cookie" });
 
@@ -383,18 +379,11 @@ app.post("/api/save-voucher", async (req, res) => {
 });
 
 // ======================================================
-// 5) AUTOPEE: Freeship vouchers (list + save with KEY)
+// 5) AUTOPEE: LIST freeships (không cần cookie)
 // ======================================================
 app.post("/api/freeships", async (req, res) => {
   try {
-    let { cookies, limit } = req.body || {};
-    if (!Array.isArray(cookies)) cookies = [cookies];
-    cookies = cookies.map(sanitize).filter(Boolean);
-
-    const cookie = cookies.join("\n").trim();
-    if (!cookie) return res.status(400).json({ ok: false, message: "Thiếu cookie" });
-
-    const lim = Number(limit || 200);
+    const lim = Number(req.body?.limit || 200);
     const url = `https://api.autopee.com/shopee/freeships?limit=${lim}`;
 
     const out = await autopeeList(url);
@@ -406,21 +395,18 @@ app.post("/api/freeships", async (req, res) => {
   }
 });
 
+// Save freeship (cần cookie + key)
 app.post("/api/save-freeship", async (req, res) => {
   try {
     let { cookies, code, key } = req.body || {};
     code = String(code || "").trim();
     key = String(key || "").trim();
-
     if (!code) return res.status(400).json({ ok: false, message: "Thiếu voucher code" });
 
-    if (key !== FREESHIP_KEY) {
-      return res.status(403).json({ ok: false, message: "Sai KEY freeship" });
-    }
+    if (key !== FREESHIP_KEY) return res.status(403).json({ ok: false, message: "Sai KEY freeship" });
 
     if (!Array.isArray(cookies)) cookies = [cookies];
     cookies = cookies.map(sanitize).filter(Boolean);
-
     const cookie = cookies.join("\n").trim();
     if (!cookie) return res.status(400).json({ ok: false, message: "Thiếu cookie" });
 
@@ -438,8 +424,9 @@ app.post("/api/save-freeship", async (req, res) => {
 });
 
 // ======================================================
-app.listen(3000, () => {
-  console.log("Server chạy: http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Server running on port:", PORT);
   console.log("Excel path:", EXCEL_PATH);
   console.log("WORKER_URL:", WORKER_URL);
   console.log("FREESHIP_KEY:", FREESHIP_KEY ? "(set)" : "(missing)");
