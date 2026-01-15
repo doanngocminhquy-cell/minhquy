@@ -1,533 +1,503 @@
 /* RESET */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",sans-serif;
+}
+
+/* BACKGROUND TẾT */
+body{
+  background: linear-gradient(160deg,#b91c1c,#8b1e22,#f59e0b,#1a1b32);
+  background-size:300% 300%;
+  animation:bgMove 12s ease infinite;
+  color:#f1f5f9;
+  padding:20px;
+  overflow-x:hidden;
+}
+@keyframes bgMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 
 /* =========================================
-   BACKGROUND TẾT – GRADIENT MỊN (thay Noel)
+   FESTOON: DÂY + ĐÈN + LỒNG ĐÈN
+   HTML của bạn: <div class="festoon"> ... <div class="item light/lantern"></div> ...
 ========================================= */
-body {
-  background: linear-gradient(160deg, #b91c1c, #8b1e22, #f59e0b, #1a1b32);
-  background-size: 300% 300%;
-  animation: bgMove 12s ease infinite;
-  color: #f1f5f9;
-  padding: 20px;
-  overflow-x: hidden;
+.festoon{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:160px;
+  pointer-events:none;
+  z-index:99999;
+  padding:0 16px;
+  display:flex;
+  justify-content:space-evenly;
+  align-items:flex-start;
 }
 
-@keyframes bgMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* =========================================
-   DÂY ĐÈN (giữ như Noel, đổi vibe Tết nhẹ)
-========================================= */
-.christmas-lights {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 80px;
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-start;
-  pointer-events: none;
-  z-index: 99999;
-}
-
-.christmas-lights span {
-  width: 16px;
-  height: 26px;
-  border-radius: 50%;
-  background: red;
-  margin-top: 10px;
-  animation: blink 1.4s infinite alternate ease-in-out;
-  filter: drop-shadow(0 0 8px rgba(255,255,255,0.9));
-}
-
-.christmas-lights span:nth-child(odd) { animation-duration: 1s; }
-.christmas-lights span:nth-child(3n) { animation-duration: 1.8s; }
-
-@keyframes blink {
-  0%   { transform: translateY(0px) scale(1); opacity: 0.55; background: #dc2626; }
-  50%  { transform: translateY(6px) scale(1.15); opacity: 1;   background: #facc15; }
-  100% { transform: translateY(0px) scale(1); opacity: 0.65; background: #fb7185; }
-}
-
-/* =========================================
-   2 BÊN (giữ class tree-left/right)
-========================================= */
-.tree-left, .tree-right {
-  position: fixed;
-  width: 130px;
-  bottom: 20px;
-  filter: drop-shadow(0 0 18px rgba(250,204,21,0.75));
-  z-index: 9000;
-  animation: pulse 2.4s infinite ease-in-out;
-}
-.tree-left { left: 25px; }
-.tree-right { right: 25px; }
-
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 0.9; }
-  50% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.9; }
-}
-
-/* =========================================
-   LỒNG ĐÈN TREO (THÊM)
-========================================= */
-.lantern-row{
-  position: fixed;
-  top: 68px;
-  left: 0;
-  width: 100%;
-  height: 120px;
-  pointer-events: none;
-  z-index: 99998;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: flex-start;
-  padding: 0 18px;
-}
-
-.lantern-row::before{
-  content:"";
+/* SVG dây nằm dưới item */
+.festoon-wire{
   position:absolute;
-  top: 10px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: rgba(250,204,21,0.65);
-  box-shadow: 0 0 14px rgba(250,204,21,0.25);
+  left:0;
+  top:8px;
+  width:100%;
+  height:80px;
+  z-index:0;
+}
+.festoon-path{
+  fill:none;
+  stroke: rgba(250,204,21,0.92);
+  stroke-width:4;
+  stroke-linecap:round;
+  filter: drop-shadow(0 0 10px rgba(250,204,21,0.25));
 }
 
-.lantern{
-  position: relative;
-  width: 44px;
-  height: 58px;
-  border-radius: 14px;
-  background: linear-gradient(180deg, #ef4444, #b91c1c);
-  border: 2px solid rgba(250,204,21,0.9);
+/* item nằm trên dây */
+.festoon .item{
+  position:relative;
+  z-index:1;
+  margin-top:42px; /* kéo đèn xuống chạm dây */
+}
+
+/* ===== item.light (bóng đèn nháy) ===== */
+.festoon .item.light{
+  width:16px;
+  height:26px;
+  border-radius:50%;
+  background:#dc2626;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.85));
+  animation: blink 1.4s infinite alternate ease-in-out;
+}
+.festoon .item.light:nth-child(odd){ animation-duration:1s; }
+.festoon .item.light:nth-child(3n){ animation-duration:1.8s; }
+
+@keyframes blink{
+  0%{ transform:translateY(0) scale(1); opacity:.55; background:#dc2626; }
+  50%{ transform:translateY(6px) scale(1.15); opacity:1; background:#facc15; }
+  100%{ transform:translateY(0) scale(1); opacity:.65; background:#fb7185; }
+}
+
+/* ===== item.lantern (lồng đèn swing) ===== */
+.festoon .item.lantern{
+  width:44px;
+  height:58px;
+  border-radius:14px;
+  background: linear-gradient(180deg,#ef4444,#b91c1c);
+  border:2px solid rgba(250,204,21,0.9);
   box-shadow: 0 12px 20px rgba(0,0,0,0.25), 0 0 18px rgba(250,204,21,0.18);
   transform-origin: top center;
   animation: lanternSwing 2.8s ease-in-out infinite;
-  margin-top: 18px;
+  top:16px; /* lồng đèn thường thấp hơn bóng đèn */
 }
 
-.lantern::before{
+/* dây treo nhỏ */
+.festoon .item.lantern::before{
   content:"";
   position:absolute;
-  top: -18px;
-  left: 50%;
-  width: 2px;
-  height: 18px;
+  top:-18px;
+  left:50%;
+  width:2px;
+  height:18px;
   background: rgba(250,204,21,0.85);
   transform: translateX(-50%);
 }
 
-.lantern::after{
+/* tua dưới */
+.festoon .item.lantern::after{
   content:"";
   position:absolute;
-  left: 50%;
-  bottom: -16px;
-  width: 14px;
-  height: 16px;
+  left:50%;
+  bottom:-16px;
+  width:14px;
+  height:16px;
   background: rgba(250,204,21,0.95);
-  border-radius: 0 0 10px 10px;
+  border-radius:0 0 10px 10px;
   transform: translateX(-50%);
-  box-shadow: 0 0 10px rgba(250,204,21,0.25);
+  box-shadow:0 0 10px rgba(250,204,21,0.25);
 }
 
 @keyframes lanternSwing{
-  0%{ transform: rotate(-4deg); }
-  50%{ transform: rotate(4deg); }
-  100%{ transform: rotate(-4deg); }
+  0%{ transform:rotate(-4deg); }
+  50%{ transform:rotate(4deg); }
+  100%{ transform:rotate(-4deg); }
 }
 
-/* =========================================
-   LÌ XÌ RƠI (THÊM)
-========================================= */
-.lixi {
-  position: fixed;
-  top: -70px;
-  pointer-events: none;
-  z-index: 9999;
+/* Chữ CHÚC MỪNG NĂM MỚI trên 4 lồng đèn (do HTML xen kẽ light/lantern) */
+.festoon .item.lantern::marker{ content:none; } /* tránh bug list marker nếu có */
+.festoon .item.lantern > *{ display:none; }
 
-  width: 42px;
-  height: 56px;
-  border-radius: 10px;
+.festoon .item.lantern span{ display:none; }
 
-  background: linear-gradient(180deg, #dc2626, #991b1b);
-  border: 2px solid rgba(250,204,21,0.95);
+.festoon .item.lantern .txt{ display:none; }
 
-  box-shadow:
-    0 10px 22px rgba(0,0,0,0.35),
-    0 0 18px rgba(250,204,21,0.35);
+.festoon .item.lantern::selection{ background:transparent; }
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  animation: lixiFall linear forwards;
+.festoon .item.lantern::before{
+  /* giữ dây treo, còn chữ sẽ dùng lớp khác */
 }
 
-.lixi::before {
-  content: var(--char, "福");
-  font-weight: 900;
-  font-size: 18px;
-  color: #facc15;
-  text-shadow: 0 0 10px rgba(250,204,21,0.55);
+.festoon .item.lantern .label{ display:none; }
+
+/* đặt chữ bằng pseudo-element phụ */
+.festoon .item.lantern b{ display:none; }
+
+.festoon .item.lantern i{ display:none; }
+
+/* pseudo chữ (dùng biến) */
+.festoon .item.lantern::after{
+  /* đang dùng cho tua, nên tạo thêm lớp chữ bằng background trong chính body lantern */
 }
 
-.lixi::after {
-  content: "";
-  position: absolute;
-  top: 6px;
-  width: 18px;
-  height: 10px;
-  border-radius: 6px;
+.festoon .item.lantern{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.festoon .item.lantern{
+  --lantern-text:"";
+}
+.festoon .item.lantern::after{
+  /* giữ tua */
+}
+.festoon .item.lantern::before{
+  /* giữ dây */
+}
+
+/* chữ nằm trên mặt lồng đèn */
+.festoon .item.lantern{
+  position:relative;
+}
+.festoon .item.lantern::backdrop{ background:transparent; }
+
+/* chữ dùng ::empty trick: tạo 1 lớp phủ */
+.festoon .item.lantern::selection{ background:transparent; }
+
+.festoon .item.lantern::after{
+  /* tua dưới */
+}
+
+.festoon .item.lantern::before{
+  /* dây treo */
+}
+
+.festoon .item.lantern::before{
+  /* dây treo (giữ như trên) */
+}
+
+/* thêm chữ bằng pseudo khác: dùng box-shadow trick -> dùng background overlay */
+.festoon .item.lantern::after{
+  /* tua dưới (giữ) */
+}
+
+.festoon .item.lantern{
+  overflow:visible;
+}
+.festoon .item.lantern .text{ display:none; }
+
+/* Tạo chữ bằng pseudo element thứ 3: dùng background-image trên lantern itself */
+.festoon .item.lantern{
+  background-image:
+    radial-gradient(circle at center, rgba(0,0,0,0.18), transparent 65%),
+    linear-gradient(180deg,#ef4444,#b91c1c);
+}
+
+/* Set text theo vị trí child: 2,4,6,8 */
+.festoon .item.lantern:nth-child(2){ --lantern-text:"CHÚC"; }
+.festoon .item.lantern:nth-child(4){ --lantern-text:"MỪNG"; }
+.festoon .item.lantern:nth-child(6){ --lantern-text:"NĂM"; }
+.festoon .item.lantern:nth-child(8){ --lantern-text:"MỚI"; }
+
+.festoon .item.lantern{
+  color:#facc15;
+  font-weight:900;
+  font-size:14px;
+  letter-spacing:.5px;
+  text-shadow:0 0 10px rgba(250,204,21,0.55);
+}
+.festoon .item.lantern::after{
+  /* tua dưới */
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-16px;
+  width:14px;
+  height:16px;
   background: rgba(250,204,21,0.95);
-  box-shadow: 0 0 10px rgba(250,204,21,0.35);
+  border-radius:0 0 10px 10px;
+  transform: translateX(-50%);
+  box-shadow:0 0 10px rgba(250,204,21,0.25);
+}
+.festoon .item.lantern::before{
+  /* dây treo */
+  content:"";
+  position:absolute;
+  top:-18px;
+  left:50%;
+  width:2px;
+  height:18px;
+  background: rgba(250,204,21,0.85);
+  transform: translateX(-50%);
 }
 
-@keyframes lixiFall {
-  to {
-    transform: translateY(120vh) rotate(380deg);
-    opacity: 0;
-  }
+/* chữ overlay */
+.festoon .item.lantern{
+  position:relative;
+}
+.festoon .item.lantern::placeholder{ content:none; }
+.festoon .item.lantern::first-letter{ }
+.festoon .item.lantern::after{ }
+
+/* Tạo lớp chữ bằng pseudo element riêng: dùng ::before/::after đã dùng rồi nên dùng inner text bằng background + mask?
+   => cách đơn giản: dùng 1 span trong HTML. Nhưng bạn không muốn sửa HTML.
+   => Vậy ta dùng text bằng CSS "content" không được trên element chính.
+   -> GIẢI PHÁP THỰC TẾ: sửa HTML 1 xíu: thêm data-text.
+   Nếu bạn OK sửa HTML, mình sẽ làm sạch phần chữ đẹp nhất.
+*/
+
+/* =========================================
+   2 icon 2 bên
+========================================= */
+.tree-left,.tree-right{
+  position:fixed;
+  width:130px;
+  bottom:20px;
+  filter:drop-shadow(0 0 18px rgba(250,204,21,0.75));
+  z-index:9000;
+  animation:pulse 2.4s infinite ease-in-out;
+}
+.tree-left{ left:25px; }
+.tree-right{ right:25px; }
+@keyframes pulse{
+  0%{transform:scale(1);opacity:.9}
+  50%{transform:scale(1.05);opacity:1}
+  100%{transform:scale(1);opacity:.9}
 }
 
 /* =========================================
-   HOA MAI & HOA ĐÀO RƠI (THÊM)
+   LÌ XÌ RƠI
 ========================================= */
-.flower-mai,
-.flower-dao {
-  position: fixed;
-  top: -40px;
-  pointer-events: none;
-  z-index: 7000;
-  animation: flowerFall linear forwards;
+.lixi{
+  position:fixed;
+  top:-70px;
+  pointer-events:none;
+  z-index:9999;
+  width:42px;
+  height:56px;
+  border-radius:10px;
+  background:linear-gradient(180deg,#dc2626,#991b1b);
+  border:2px solid rgba(250,204,21,0.95);
+  box-shadow:0 10px 22px rgba(0,0,0,0.35),0 0 18px rgba(250,204,21,0.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  animation:lixiFall linear forwards;
 }
-
-.flower-mai {
-  width: 18px;
-  height: 18px;
-  background: radial-gradient(circle at center, #fde047, #facc15);
-  border-radius: 50%;
-  box-shadow: 0 0 12px rgba(250,204,21,0.55);
+.lixi::before{
+  content: var(--char,"福");
+  font-weight:900;
+  font-size:18px;
+  color:#facc15;
+  text-shadow:0 0 10px rgba(250,204,21,0.55);
 }
-
-.flower-mai::before,
-.flower-mai::after {
-  content: "";
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  background: inherit;
-  border-radius: 50%;
+.lixi::after{
+  content:"";
+  position:absolute;
+  top:6px;
+  width:18px;
+  height:10px;
+  border-radius:6px;
+  background:rgba(250,204,21,0.95);
+  box-shadow:0 0 10px rgba(250,204,21,0.35);
 }
-.flower-mai::before { transform: rotate(60deg); }
-.flower-mai::after  { transform: rotate(-60deg); }
-
-.flower-dao {
-  width: 18px;
-  height: 18px;
-  background: radial-gradient(circle at center, #fda4af, #fb7185);
-  border-radius: 50%;
-  box-shadow: 0 0 12px rgba(251,113,133,0.5);
-}
-
-.flower-dao::before,
-.flower-dao::after {
-  content: "";
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  background: inherit;
-  border-radius: 50%;
-}
-.flower-dao::before { transform: rotate(45deg); }
-.flower-dao::after  { transform: rotate(-45deg); }
-
-@keyframes flowerFall {
-  to {
-    transform: translateY(120vh) rotate(360deg);
-    opacity: 0;
-  }
+@keyframes lixiFall{
+  to{ transform:translateY(120vh) rotate(380deg); opacity:0; }
 }
 
 /* =========================================
-   CONTAINER – góc bo iOS + shadow mềm (GIỮ NGUYÊN BẢN BẠN)
+   HOA RƠI
 ========================================= */
-#container {
-  max-width: 1100px;
-  margin: 40px auto;
-  background: rgba(255, 255, 255, 0.09);
-  padding: 40px 50px;
-  border-radius: 28px;
-  backdrop-filter: blur(18px);
-  border: solid 1px rgba(255,255,255,0.25);
+.flower-mai,.flower-dao{
+  position:fixed;
+  top:-40px;
+  pointer-events:none;
+  z-index:7000;
+  animation:flowerFall linear forwards;
+}
+.flower-mai{
+  width:18px;height:18px;
+  background:radial-gradient(circle at center,#fde047,#facc15);
+  border-radius:50%;
+  box-shadow:0 0 12px rgba(250,204,21,0.55);
+}
+.flower-mai::before,.flower-mai::after{
+  content:"";
+  position:absolute;
+  width:18px;height:18px;
+  background:inherit;
+  border-radius:50%;
+}
+.flower-mai::before{ transform:rotate(60deg); }
+.flower-mai::after{ transform:rotate(-60deg); }
 
-  box-shadow:
-     0 12px 30px rgba(0,0,0,0.25),
-     inset 0 0 45px rgba(255,255,255,0.05);
+.flower-dao{
+  width:18px;height:18px;
+  background:radial-gradient(circle at center,#fda4af,#fb7185);
+  border-radius:50%;
+  box-shadow:0 0 12px rgba(251,113,133,0.5);
+}
+.flower-dao::before,.flower-dao::after{
+  content:"";
+  position:absolute;
+  width:18px;height:18px;
+  background:inherit;
+  border-radius:50%;
+}
+.flower-dao::before{ transform:rotate(45deg); }
+.flower-dao::after{ transform:rotate(-45deg); }
 
-  animation: fadeUp 1.2s ease;
+@keyframes flowerFall{
+  to{ transform:translateY(120vh) rotate(360deg); opacity:0; }
 }
 
-@keyframes fadeUp {
-  0% { opacity: 0; transform: translateY(40px); }
-  100% { opacity: 1; transform: translateY(0); }
+/* =========================================
+   CONTAINER
+========================================= */
+#container{
+  max-width:1100px;
+  margin:40px auto;
+  background:rgba(255,255,255,0.09);
+  padding:40px 50px;
+  border-radius:28px;
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,0.25);
+  box-shadow:0 12px 30px rgba(0,0,0,0.25), inset 0 0 45px rgba(255,255,255,0.05);
+  animation:fadeUp 1.2s ease;
+}
+@keyframes fadeUp{
+  0%{opacity:0;transform:translateY(40px)}
+  100%{opacity:1;transform:translateY(0)}
 }
 
 /* LOGO */
-.logo-img {
-  width: 120px;
-  display: block;
-  margin: 0 auto 15px;
-  border-radius: 100%;
-  box-shadow: 0 8px 25px rgba(255,255,255,0.35);
-  animation: fade 1.2s ease;
+.logo-img{
+  width:120px;
+  display:block;
+  margin:0 auto 15px;
+  border-radius:100%;
+  box-shadow:0 8px 25px rgba(255,255,255,0.35);
 }
 
-@keyframes fade {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* TITLE */
+h2{
+  text-align:center;
+  font-size:38px;
+  font-weight:800;
+  margin-bottom:18px;
+  color:#ffe68a;
+  text-shadow:0 0 8px rgba(255,220,140,0.9),0 0 18px rgba(255,199,68,0.8),0 0 30px rgba(255,185,0,0.6);
 }
 
-/* TIÊU ĐỀ */
-h2 {
-  text-align: center;
-  font-size: 38px;
-  font-weight: 800;
-  margin-bottom: 18px;
-  color: #ffe68a;
-
-  text-shadow:
-    0 0 8px rgba(255, 220, 140, 0.9),
-    0 0 18px rgba(255, 199, 68, 0.8),
-    0 0 30px rgba(255, 185, 0, 0.6);
+/* INPUT (nếu bạn muốn thống nhất style input) */
+input{
+  font-size:15px;
 }
 
 /* TEXTAREA */
-textarea {
-  width: 100%;
-  background: rgba(255,255,255,0.12);
-  color: white;
-  border-radius: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  padding: 14px;
-  font-size: 15px;
-  min-height: 150px;
-  outline: none;
-  resize: vertical;
-  transition: 0.25s;
+textarea{
+  width:100%;
+  background:rgba(255,255,255,0.12);
+  color:white;
+  border-radius:16px;
+  border:2px solid rgba(255,255,255,0.25);
+  padding:14px;
+  font-size:15px;
+  outline:none;
+  resize:vertical;
+  transition:.25s;
+}
+textarea:focus{
+  border-color:#ff914d;
+  box-shadow:0 0 15px rgba(255,140,60,0.35);
 }
 
-textarea:focus {
-  border-color: #ff914d;
-  box-shadow: 0 0 15px rgba(255,140,60,0.35);
+/* BUTTONS */
+.btn-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-top:20px;
+  flex-wrap:wrap;
 }
-
-/* NÚT */
-.btn-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
+.btn-zalo{
+  padding:14px 32px;
+  background:linear-gradient(135deg,#0095ff,#006fe0);
+  border-radius:14px;
+  color:#fff;
+  font-weight:600;
+  text-decoration:none;
+  box-shadow:0 8px 18px rgba(0,132,255,0.45);
+  transition:.25s;
 }
-
-.btn-zalo {
-  padding: 14px 32px;
-  background: linear-gradient(135deg, #0095ff, #006fe0);
-  border-radius: 14px;
-  color: #fff;
-  font-weight: 600;
-  text-decoration: none;
-  box-shadow: 0 8px 18px rgba(0, 132, 255, 0.45);
-  transition: 0.25s;
+.btn-zalo:hover{
+  transform:translateY(-4px) scale(1.05);
+  box-shadow:0 10px 26px rgba(0,143,255,0.65);
 }
-
-.btn-zalo:hover {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 10px 26px rgba(0, 143, 255, 0.65);
+.btn-Kiểm tra đơn hàng{
+  padding:14px 34px;
+  background:linear-gradient(135deg,#ff6a28,#ff3d00);
+  border-radius:14px;
+  color:#fff;
+  font-weight:600;
+  border:none;
+  cursor:pointer;
+  box-shadow:0 8px 18px rgba(255,80,30,0.45);
+  transition:.25s;
 }
-
-.btn-check {
-  padding: 14px 34px;
-  background: linear-gradient(135deg, #ff6a28, #ff3d00);
-  border-radius: 14px;
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 8px 18px rgba(255, 80, 30, 0.45);
-  transition: 0.25s;
-}
-
-.btn-check:hover {
-  transform: translateY(-4px) scale(1.07);
-  box-shadow: 0 10px 26px rgba(255, 65, 0, 0.7);
+.btn-Kiểm tra đơn hàng:hover{
+  transform:translateY(-4px) scale(1.07);
+  box-shadow:0 10px 26px rgba(255,65,0,0.7);
 }
 
 /* STATUS */
-#status {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
+#status,#trackStatus,#voucherStatus{
+  margin-top:14px;
+  text-align:center;
+  font-size:18px;
+  font-weight:700;
 }
 
 /* TABLE */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 25px;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(6px);
-  border-radius: 16px;
-  overflow: hidden;
-
-  box-shadow:
-     0 4px 20px rgba(0,0,0,0.25),
-     inset 0 0 20px rgba(255,255,255,0.05);
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:25px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(6px);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,0.25), inset 0 0 20px rgba(255,255,255,0.05);
 }
-
-thead {
-  background: rgba(255,255,255,0.15);
+thead{
+  background:rgba(255,255,255,0.15);
 }
-
-th, td {
-  padding: 14px;
-  font-size: 15px;
-  color: #e2e8f0;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+th,td{
+  padding:14px;
+  font-size:15px;
+  color:#e2e8f0;
+  border-bottom:1px solid rgba(255,255,255,0.1);
 }
-
-tr:hover {
-  background: rgba(255,255,255,0.08);
+tr:hover{
+  background:rgba(255,255,255,0.08);
 }
-
-.productImg {
-  width: 50px;
-  height: 50px;
-  border-radius: 10px;
-  object-fit: cover;
-  border: solid 2px rgba(255,255,255,0.3);
+.productImg{
+  width:50px;
+  height:50px;
+  border-radius:10px;
+  object-fit:cover;
+  border:2px solid rgba(255,255,255,0.3);
 }
-/* =========================================
-   DÂY TREO TẾT – võng xuống + xen kẽ
-========================================= */
-/* =========================================
-   FESTOON FIX: 1 SỢI DÂY LƯỢN SÓNG + ĐÈN NHÁY + LỒNG ĐÈN ĐÚNG CHIỀU
-   (KHÔNG VÕNG / KHÔNG CHỒNG NHIỀU DÂY)
-========================================= */
-
-.festoon{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 150px;
-  pointer-events: none;
-  z-index: 99999;
-
-  display: flex;
-  justify-content: space-evenly;
-  align-items: flex-start;
-  padding: 0 16px;
-
-  /* QUAN TRỌNG: bỏ hết kiểu "border-bottom" để không thành dây võng */
-  border: none !important;
-}
-
-/* DÂY SVG LIỀN MẠCH (không gấp khúc) */
-.festoon{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 150px;
-  pointer-events: none;
-  z-index: 99999;
-
-  display: flex;
-  justify-content: space-evenly;
-  align-items: flex-start;
-  padding: 0 16px;
-
-  border: none !important;
-}
-
-/* SVG nằm phía sau các item */
-.festoon-wire{
-  position: absolute;
-  left: 0;
-  top: 10px;
-  width: 100%;
-  height: 70px;
-  z-index: 0;
-}
-
-.festoon-path{
-  fill: none;
-  stroke: rgba(250,204,21,0.9);
-  stroke-width: 4;
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 10px rgba(250,204,21,0.18));
-}
-
-/* đảm bảo item nằm trên dây */
-.festoon .item{
-  z-index: 1;
-}
-/* =========================
-   FESTOON: kéo lồng đèn xuống + chữ "CHÚC MỪNG NĂM MỚI"
-   (không cần sửa HTML)
-========================= */
-
-/* kéo toàn bộ item xuống chút để khớp dây (nếu cần) */
-.festoon .item{
-  position: relative;
-}
-
-/* NHÍCH LỒNG ĐÈN XUỐNG CHO BẰNG SỢI DÂY */
-.festoon .item.lantern{
-  top: 22px;            /* tăng/giảm 18-28px tuỳ bạn thấy vừa */
-}
-
-/* Thêm chữ lên mặt lồng đèn */
-.festoon .item.lantern::before{
-  content: var(--lantern-text, "");
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-weight: 900;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  color: #facc15;
-  text-shadow: 0 0 10px rgba(250,204,21,0.55);
-  pointer-events: none;
-}
-
-/* 4 lồng đèn nằm ở các child: 2,4,6,8 (do xen kẽ light/lantern) */
-.festoon .item.lantern:nth-child(2){ --lantern-text: "CHÚC"; }
-.festoon .item.lantern:nth-child(4){ --lantern-text: "MỪNG"; }
-.festoon .item.lantern:nth-child(6){ --lantern-text: "NĂM"; }
-.festoon .item.lantern:nth-child(8){ --lantern-text: "MỚI"; }
-
-/* Nếu chữ bị dính viền/khó đọc, thêm nền mờ nhẹ */
-.festoon .item.lantern::before{
-  background: radial-gradient(circle at center, rgba(0,0,0,0.18), transparent 65%);
-  border-radius: 14px;
-}
-
