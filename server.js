@@ -431,3 +431,22 @@ app.listen(PORT, () => {
   console.log("WORKER_URL:", WORKER_URL);
   console.log("FREESHIP_KEY:", FREESHIP_KEY ? "(set)" : "(missing)");
 });
+app.get("/api/debug-autopee", async (req, res) => {
+  try {
+    const url = "https://api.autopee.com/shopee/vouchers?limit=5";
+    const r = await axios.get(url, {
+      headers: AUTOPEE_HEADERS,
+      timeout: 20000,
+      validateStatus: () => true,
+    });
+    return res.json({
+      ok: true,
+      status: r.status,
+      contentType: r.headers["content-type"] || null,
+      dataPreview: JSON.stringify(r.data).slice(0, 400),
+    });
+  } catch (e) {
+    return res.status(500).json({ ok: false, detail: String(e.message) });
+  }
+});
+
