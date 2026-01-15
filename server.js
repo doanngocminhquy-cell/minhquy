@@ -85,12 +85,14 @@ function parseSaveResult(code, httpStatus, body) {
 
 async function autopeeList(url) {
   const r = await axios.get(url, {
-    headers: {
-      "Accept": "application/json, text/plain, */*",
-      "Origin": "https://www.autopee.com",
-      "Referer": "https://www.autopee.com/products/shopee/vouchers",
-      "User-Agent": "Mozilla/5.0",
-    },
+   headers: {
+  "Accept": "application/json, text/plain, */*",
+  "Content-Type": "application/json",
+  "Origin": "https://www.autopee.com",
+  "Referer": "https://www.autopee.com/products/shopee/vouchers",
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+}
+
     timeout: 20000,
     validateStatus: () => true,
   });
