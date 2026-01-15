@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Tra cứu đơn hàng Shopee – Minh Quý</title>
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./style.css" />
 </head>
 
 <body>
-
+  <!-- ===== THEME TẾT (bị mất lần trước - nay thêm lại) ===== -->
   <div class="festoon" aria-hidden="true">
     <svg class="festoon-wire" viewBox="0 0 1200 80" preserveAspectRatio="none">
       <path class="festoon-path"
@@ -33,11 +33,12 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Red_lantern_icon.svg/512px-Red_lantern_icon.svg.png" class="tree-right" />
 
   <script>
+    // rơi lì xì
     function createLiXi() {
       const el = document.createElement("div");
       el.className = "lixi";
 
-      const chars = ["福", "禄", "寿", "TẾT", "LỘC", "PHÁT", "TÀI","PHÚC","THỌ" ];
+      const chars = ["福","禄","寿","TẾT","LỘC","PHÁT","TÀI","PHÚC","THỌ"];
       el.style.setProperty("--char", `"${chars[Math.floor(Math.random() * chars.length)]}"`);
 
       el.style.left = Math.random() * window.innerWidth + "px";
@@ -46,7 +47,6 @@
       const tilt = (Math.random() * 50 - 25).toFixed(2);
       const scale = (0.85 + Math.random() * 0.6).toFixed(2);
       el.style.transform = `rotate(${tilt}deg) scale(${scale})`;
-
       el.style.opacity = (0.55 + Math.random() * 0.45).toFixed(2);
 
       document.body.appendChild(el);
@@ -56,6 +56,7 @@
   </script>
 
   <script>
+    // rơi hoa mai/đào
     function createFlower(type) {
       const el = document.createElement("div");
       el.className = type === "mai" ? "flower-mai" : "flower-dao";
@@ -75,6 +76,50 @@
     setInterval(() => createFlower("dao"), 1800);
   </script>
 
+  <!-- ===== MODAL NHẬP KEY FREESHIP (ô to) ===== -->
+  <div id="keyModal" style="
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    padding:16px;
+  ">
+    <div style="
+      width:min(520px, 96vw);
+      border-radius:18px;
+      padding:18px;
+      background:rgba(30,30,30,0.92);
+      border:1px solid rgba(255,255,255,0.18);
+      box-shadow:0 20px 60px rgba(0,0,0,0.35);
+    ">
+      <div style="font-weight:900;font-size:18px;margin-bottom:8px;">🔒 Mở khóa Freeship</div>
+      <div style="opacity:0.9;line-height:1.35;margin-bottom:12px;">
+        Voucher Freeship cần <b>KEY</b> để lưu. Nhập KEY để mở khóa.
+      </div>
+
+      <input id="keyInput" placeholder="Nhập KEY (vd: 800đ 1 lần lưu mã free ship nhé mấy ní)" style="
+        width:100%;
+        padding:14px;
+        border-radius:14px;
+        border:2px solid rgba(255,255,255,0.25);
+        background:rgba(255,255,255,0.12);
+        color:#fff;
+        outline:none;
+        font-size:16px;
+      "/>
+
+      <div id="keyMsg" style="margin-top:10px;font-weight:800;"></div>
+
+      <div style="display:flex;gap:10px;margin-top:14px;">
+        <button class="btn-check" style="flex:1;height:44px;" onclick="unlockFreeship()">Mở khóa</button>
+        <button class="btn-check" style="flex:1;height:44px;opacity:.8;" onclick="closeKeyModal()">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CONTENT ===== -->
   <div id="container">
     <img src="./logo.png" class="logo-img" alt="logo">
 
@@ -86,35 +131,86 @@
 
     <h2>Tra cứu đơn hàng Shopee – Minh Quý 🧧</h2>
 
+    <!-- TRA EXCEL -->
     <input id="codeInput" placeholder="Nhập mã đơn (VD: EN4255... hoặc mã đơn Shopee)"
       style="width:100%;padding:14px;border-radius:14px;border:2px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.12);color:#fff;outline:none;" />
     <div style="height:10px"></div>
-
     <button onclick="trackExcel()" class="btn-check" style="width:100%;">Tra mã đơn</button>
-
     <div id="trackStatus" style="margin-top:14px;text-align:center;font-weight:700;"></div>
     <div id="trackResult"></div>
 
     <div style="height:16px"></div>
 
+    <!-- COOKIE -->
     <textarea id="cookieBox" rows="6" placeholder="Dán cookie SPC_ST=... vào đây"></textarea>
 
+    <!-- GIỮ NÚT ZALO + ĐỔI NÚT CHECK -->
     <div class="btn-row">
       <a href="https://zalo.me/g/rsasqo212" class="btn-zalo">Nhóm ZALO Đặt Đơn</a>
-      <button onclick="go()" class="btn-check">Check</button>
+      <button onclick="go()" class="btn-check">Kiểm tra đơn hàng</button>
     </div>
 
     <div id="status"></div>
     <div id="result"></div>
+
+    <!-- ===================== VOUCHER (TỐI GIẢN) ===================== -->
+    <div style="height:18px"></div>
+
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button id="tab-discount" class="btn-check" onclick="switchTab('discount')" style="flex:1;">
+        Voucher mã giảm giá <span id="countDiscount"></span>
+      </button>
+      <button id="tab-freeship" class="btn-check" onclick="switchTab('freeship')" style="flex:1;opacity:.75;">
+        Voucher Freeship <span id="countFreeship"></span>
+      </button>
+    </div>
+
+    <div style="height:10px"></div>
+
+    <button onclick="loadCurrentTab()" class="btn-check" style="width:100%;">🔄 Làm mới danh sách</button>
+    <div id="voucherStatus" style="margin-top:10px;font-weight:700;text-align:center;"></div>
+
+    <!-- ✅ BỎ Ô TÌM MÃ THEO YÊU CẦU -->
+
+    <div id="voucherList" style="margin-top:10px;"></div>
   </div>
 
   <script>
-    async function go() {
-      const cookies = document.getElementById("cookieBox").value
-        .split(/\r?\n/)
-        .map(s => s.trim())
-        .filter(Boolean);
+    let CURRENT_TAB = "discount";
+    let VOUCHERS_CACHE = [];
+    let FREESHIP_UNLOCKED = false;
+    let FREESHIP_KEY_VALUE = "";
+    let PENDING_SAVE_CODE = "";
 
+    function escapeHtml(s) {
+      return String(s ?? "").replace(/[&<>"']/g, m => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    function fmtTime(unixSec) {
+      if (!unixSec) return "—";
+      const d = new Date(unixSec * 1000);
+      return d.toLocaleString("vi-VN");
+    }
+
+    function shortDesc(desc) {
+      const t = String(desc || "").replace(/\s+/g, " ").trim();
+      return t.length > 140 ? t.slice(0, 140) + "…" : t;
+    }
+
+    function readCookies() {
+      return document.getElementById("cookieBox").value
+        .split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    }
+
+    function setVoucherStatus(text) {
+      document.getElementById("voucherStatus").textContent = text || "";
+    }
+
+    // ===================== ORDERS =====================
+    async function go() {
+      const cookies = readCookies();
       const status = document.getElementById("status");
       const result = document.getElementById("result");
 
@@ -127,12 +223,13 @@
         body: JSON.stringify({ cookies })
       });
 
+      const text = await res.text();
       let data;
-      try { data = await res.json(); }
-      catch { status.textContent = "Lỗi: Server không trả JSON."; return; }
+      try { data = JSON.parse(text); } catch { data = { raw: text }; }
 
       if (!res.ok) {
         status.textContent = "Lỗi: " + (data.error || "unknown");
+        result.innerHTML = `<pre style="white-space:pre-wrap;text-align:left;">${escapeHtml(JSON.stringify(data, null, 2))}</pre>`;
         return;
       }
 
@@ -140,15 +237,15 @@
 
       const rows = (data.orders || []).map(o => `
         <tr>
-          <td>${o.stt || "—"}</td>
-          <td>${o.productImg ? `<img src="${o.productImg}" class="productImg"/>` : "—"}</td>
-          <td>${o.cod ?? "—"}</td>
-          <td>${o.mvd || "—"}</td>
-          <td>${o.status || "—"}</td>
-          <td>${o.receiver || "—"}</td>
-          <td>${o.receiverPhone || "—"}</td>
-          <td title="${o.address || ""}">${o.address || "—"}</td>
-          <td>${o.shipperPhone || "—"}</td>
+          <td>${escapeHtml(o.stt || "—")}</td>
+          <td>${o.productImg ? `<img src="${escapeHtml(o.productImg)}" class="productImg"/>` : "—"}</td>
+          <td>${escapeHtml(o.cod ?? "—")}</td>
+          <td>${escapeHtml(o.mvd || "—")}</td>
+          <td>${escapeHtml(o.status || "—")}</td>
+          <td>${escapeHtml(o.receiver || "—")}</td>
+          <td>${escapeHtml(o.receiverPhone || "—")}</td>
+          <td title="${escapeHtml(o.address || "")}">${escapeHtml(o.address || "—")}</td>
+          <td>${escapeHtml(o.shipperPhone || "—")}</td>
         </tr>
       `).join("");
 
@@ -156,15 +253,8 @@
         <table>
           <thead>
             <tr>
-              <th>STT</th>
-              <th>Ảnh</th>
-              <th>COD</th>
-              <th>Mã vận đơn</th>
-              <th>Trạng thái</th>
-              <th>Người nhận</th>
-              <th>SĐT</th>
-              <th>Địa chỉ</th>
-              <th>SĐT ship</th>
+              <th>STT</th><th>Ảnh</th><th>COD</th><th>Mã vận đơn</th>
+              <th>Trạng thái</th><th>Người nhận</th><th>SĐT</th><th>Địa chỉ</th><th>SĐT ship</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -177,7 +267,6 @@
       const st = document.getElementById("trackStatus");
       const rs = document.getElementById("trackResult");
 
-      // dọn kết quả cookie để đỡ rối
       document.getElementById("status").textContent = "";
       document.getElementById("result").innerHTML = "";
 
@@ -190,17 +279,14 @@
       st.textContent = "Đang tra...";
       rs.innerHTML = "";
 
-      let res, data;
-      try {
-        res = await fetch(`/api/track?code=${encodeURIComponent(code)}`);
-        data = await res.json();
-      } catch {
-        st.textContent = "Lỗi: Không gọi được API.";
-        return;
-      }
+      const res = await fetch(`/api/track?code=${encodeURIComponent(code)}`);
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); } catch { data = { raw: text }; }
 
       if (!res.ok) {
         st.textContent = "Lỗi: " + (data.error || "unknown");
+        rs.innerHTML = `<pre style="white-space:pre-wrap;text-align:left;">${escapeHtml(JSON.stringify(data, null, 2))}</pre>`;
         return;
       }
 
@@ -211,36 +297,235 @@
         <table>
           <thead>
             <tr>
-              <th>Mã đơn</th>
-              <th>Tên</th>
-              <th>Địa chỉ</th>
-              <th>Sản phẩm</th>
-              <th>COD</th>
-              <th>Mã vận đơn</th>
-              <th>Mã đơn Shopee</th>
+              <th>Mã nhập</th><th>Tên</th><th>Địa chỉ</th><th>Sản phẩm</th><th>COD</th><th>Mã vận đơn</th><th>Mã đơn Shopee</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>${code}</td>
-              <td>${o.name || "—"}</td>
-              <td title="${o.address || ""}">${o.address || "—"}</td>
-              <td>${o.product || "—"}</td>
-              <td>${o.cod || "—"}</td>
-              <td>${o.mvd || "—"}</td>
-              <td>${o.shopeeOrder || "—"}</td>
+              <td>${escapeHtml(code)}</td>
+              <td>${escapeHtml(o.name || "—")}</td>
+              <td title="${escapeHtml(o.address || "")}">${escapeHtml(o.address || "—")}</td>
+              <td>${escapeHtml(o.product || "—")}</td>
+              <td>${escapeHtml(o.cod || "—")}</td>
+              <td>${escapeHtml(o.mvd || "—")}</td>
+              <td>${escapeHtml(o.shopeeOrder || "—")}</td>
             </tr>
           </tbody>
         </table>
       `;
     }
-  </script>
 
-  <script type="text/javascript">
-    if (window.aclib && typeof aclib.runAutoTag === "function") {
-      aclib.runAutoTag({ zoneId: 'wfbsexymx9' });
+    // ===================== FREESHIP KEY MODAL =====================
+    function openKeyModal(pendingCode = "") {
+      PENDING_SAVE_CODE = pendingCode || "";
+      document.getElementById("keyMsg").textContent = "";
+      document.getElementById("keyInput").value = FREESHIP_KEY_VALUE || "";
+      document.getElementById("keyModal").style.display = "flex";
+      setTimeout(() => document.getElementById("keyInput").focus(), 50);
     }
-  </script>
 
+    function closeKeyModal() {
+      document.getElementById("keyModal").style.display = "none";
+      PENDING_SAVE_CODE = "";
+    }
+
+    function unlockFreeship() {
+      const v = (document.getElementById("keyInput").value || "").trim();
+      if (!v) {
+        document.getElementById("keyMsg").textContent = "❌ Chưa nhập KEY";
+        return;
+      }
+      FREESHIP_UNLOCKED = true;
+      FREESHIP_KEY_VALUE = v;
+      document.getElementById("keyMsg").textContent = "✅ Đã mở khóa";
+      setTimeout(() => {
+        closeKeyModal();
+        renderVoucherList();
+        // nếu user mở modal từ nút Lưu -> lưu ngay
+        if (PENDING_SAVE_CODE) saveOne(PENDING_SAVE_CODE);
+      }, 350);
+    }
+
+    // ===================== VOUCHER =====================
+    function switchTab(tab) {
+      CURRENT_TAB = tab;
+
+      const a = document.getElementById("tab-discount");
+      const b = document.getElementById("tab-freeship");
+
+      if (tab === "discount") {
+        a.style.opacity = "1";
+        b.style.opacity = ".75";
+      } else {
+        b.style.opacity = "1";
+        a.style.opacity = ".75";
+        // ✅ bấm freeship thì bật ô to nhập key (nếu chưa unlock)
+        if (!FREESHIP_UNLOCKED) openKeyModal("");
+      }
+
+      setVoucherStatus("");
+      VOUCHERS_CACHE = [];
+      document.getElementById("voucherList").innerHTML = "";
+      loadCurrentTab();
+    }
+
+    async function loadCurrentTab() {
+      const cookies = readCookies();
+      if (!cookies.length) {
+        setVoucherStatus("❌ Chưa nhập cookie");
+        return;
+      }
+
+      setVoucherStatus("Đang tải...");
+      VOUCHERS_CACHE = [];
+
+      const endpoint = CURRENT_TAB === "discount" ? "/api/vouchers" : "/api/freeships";
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cookies, limit: 200 })
+      });
+
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data || data.ok === false) {
+        setVoucherStatus("❌ Lỗi tải danh sách");
+        return;
+      }
+
+      VOUCHERS_CACHE = data.vouchers || [];
+      setVoucherStatus(`✅ Có ${data.count} voucher`);
+
+      if (endpoint === "/api/vouchers") {
+        document.getElementById("countDiscount").textContent = `(${data.count})`;
+      } else {
+        document.getElementById("countFreeship").textContent = `(${data.count})`;
+      }
+
+      renderVoucherList();
+    }
+
+    function renderVoucherList() {
+      const listEl = document.getElementById("voucherList");
+
+      if (!VOUCHERS_CACHE.length) {
+        listEl.innerHTML = `<div style="opacity:0.9;text-align:center;margin-top:10px;">Chưa có dữ liệu.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = VOUCHERS_CACHE.map(v => {
+        const code = escapeHtml(v.voucherCode || "—");
+        const hsd = escapeHtml(fmtTime(v.endTime));
+        const desc = escapeHtml(shortDesc(v.description || ""));
+
+        // ✅ hết hạn / hết lượt -> disable nút + hiện chữ
+        const isExpired = !!v.hasExpired;
+        const isFull = !!v.fullyClaimed;
+        const disabled = (isExpired || isFull) ? "disabled" : "";
+
+        // ✅ nếu freeship chưa unlock thì vẫn cho xem list, nhưng nút Lưu sẽ bắt nhập key
+        const lockHint = (CURRENT_TAB === "freeship" && !FREESHIP_UNLOCKED)
+          ? `<div style="margin-top:8px;font-weight:800;">🔒 Nhập KEY để lưu freeship</div>`
+          : "";
+
+        const stateText = isExpired
+          ? `<div style="margin-top:8px;font-weight:800;">⛔ Mã đã hết hạn</div>`
+          : (isFull ? `<div style="margin-top:8px;font-weight:800;">⚠️ Mã đã hết lượt sử dụng/ Mã đã nhập rồi </div>` : "");
+
+        return `
+          <div style="
+            border:1px solid rgba(255,255,255,0.18);
+            background:rgba(255,255,255,0.10);
+            padding:12px 14px;
+            border-radius:14px;
+            margin-bottom:10px;
+          ">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+              <div style="flex:1;">
+                <div style="font-weight:900;font-size:16px;">${code}</div>
+                <div style="opacity:.95;margin-top:6px;line-height:1.35;">${desc}</div>
+                <div style="opacity:.85;margin-top:8px;font-size:13px;">HSD: ${hsd}</div>
+
+                ${stateText}
+                ${lockHint}
+
+                <div id="msg-${code}" style="margin-top:8px;font-weight:800;"></div>
+              </div>
+
+              <button
+                id="btn-${code}"
+                class="btn-check"
+                style="min-width:72px;height:40px;"
+                onclick="saveOne('${code}')"
+                ${disabled}
+              >Lưu</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function saveOne(code) {
+      const cookies = readCookies();
+      const btn = document.getElementById(`btn-${code}`);
+      const msg = document.getElementById(`msg-${code}`);
+
+      if (!cookies.length) {
+        msg.textContent = "❌ Chưa nhập cookie";
+        return;
+      }
+
+      // ✅ freeship: chưa unlock -> bật modal nhập key (ô to)
+      if (CURRENT_TAB === "freeship" && !FREESHIP_UNLOCKED) {
+        openKeyModal(code);
+        return;
+      }
+
+      btn.disabled = true;
+      const oldText = btn.textContent;
+      btn.textContent = "Đang...";
+
+      let endpoint = "/api/save-voucher";
+      let payload = { cookies, code };
+
+      if (CURRENT_TAB === "freeship") {
+        endpoint = "/api/save-freeship";
+        payload = { cookies, code, key: FREESHIP_KEY_VALUE };
+      }
+
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok || !data || data.ok === false) {
+        msg.textContent = data?.message ? `❌ ${data.message}` : "❌ Lưu lỗi";
+        btn.disabled = false;
+        btn.textContent = oldText;
+        return;
+      }
+
+      const r = data.result || {};
+      // ✅ yêu cầu: không hiện OK -> server đã đổi pretty thành “Mã đã hết lượt…” rồi
+      msg.textContent = r.pretty || "⚠️ Mã đã hết lượt sử dụng";
+
+      if (r.state === "saved" || r.state === "already_saved") {
+        btn.textContent = "Đã lưu";
+        btn.disabled = true;
+      } else if (r.state === "fully_claimed" || r.state === "unknown_but_ok") {
+        // ✅ hết lượt -> disable luôn
+        btn.textContent = "Hết lượt";
+        btn.disabled = true;
+      } else {
+        btn.textContent = "Lưu";
+        btn.disabled = false;
+      }
+    }
+
+    // load lần đầu
+    switchTab("discount");
+  </script>
 </body>
 </html>
