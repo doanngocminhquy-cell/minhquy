@@ -506,7 +506,7 @@
         btn.textContent = oldText;
         return;
       }
-    
+
       const r = data.result || {};
       // ✅ yêu cầu: không hiện OK -> server đã đổi pretty thành “Mã đã hết lượt…” rồi
       msg.textContent = r.pretty || "⚠️ Mã đã hết lượt sử dụng";
