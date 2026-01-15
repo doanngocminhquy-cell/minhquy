@@ -501,3 +501,40 @@ tr:hover{
   object-fit:cover;
   border:2px solid rgba(255,255,255,0.3);
 }
+/* ===== OVERRIDE MÀU NÚT (DÁN CUỐI FILE) ===== */
+
+/* Nút cam: Tra mã đơn / Kiểm tra đơn hàng / Voucher / Làm mới / Lưu ... */
+.btn-check{
+  background: linear-gradient(135deg,#ff8a00,#ff3d00) !important;
+  color:#fff !important;
+  border:none !important;
+  border-radius:14px !important;
+  font-weight:700 !important;
+  box-shadow:0 10px 22px rgba(255,90,20,0.45) !important;
+  transition:.25s !important;
+}
+.btn-check:hover{
+  transform: translateY(-3px) scale(1.03) !important;
+  box-shadow:0 14px 28px rgba(255,70,0,0.6) !important;
+}
+.btn-check:active{
+  transform: translateY(-1px) scale(1.01) !important;
+}
+.btn-check:disabled{
+  opacity:.55 !important;
+  cursor:not-allowed !important;
+  transform:none !important;
+  box-shadow:none !important;
+}
+
+/* Nút Zalo xanh giữ nguyên nhưng làm “nịnh mắt” hơn */
+.btn-zalo{
+  background: linear-gradient(135deg,#00b2ff,#0066ff) !important;
+  color:#fff !important;
+  box-shadow:0 10px 22px rgba(0,132,255,0.45) !important;
+}
+.btn-zalo:hover{
+  transform: translateY(-3px) scale(1.03) !important;
+  box-shadow:0 14px 28px rgba(0,120,255,0.65) !important;
+}
+
